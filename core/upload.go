@@ -21,11 +21,11 @@ func GetUploads(page, pagesize int) husk.Collection {
 	return ctx.Uploads.Find(page, pagesize, husk.Everything())
 }
 
-func GetUpload(key *husk.Key) (result husk.Recorder, err error) {
+func GetUpload(key husk.Key) (result husk.Recorder, err error) {
 	return ctx.Uploads.FindByKey(key)
 }
 
-func GetUploadFile(key *husk.Key) (result []byte, filename string, err error) {
+func GetUploadFile(key husk.Key) (result []byte, filename string, err error) {
 	upload, err := GetUpload(key)
 
 	if err != nil {

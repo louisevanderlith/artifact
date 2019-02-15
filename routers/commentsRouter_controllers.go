@@ -7,7 +7,7 @@ import (
 
 func init() {
 
-	beego.GlobalControllerRouter["github.com/louisevanderlith/mango/api/artifact/controllers:UploadController"] = append(beego.GlobalControllerRouter["github.com/louisevanderlith/mango/api/artifact/controllers:UploadController"],
+	beego.GlobalControllerRouter["github.com/louisevanderlith/artifact/controllers:UploadController"] = append(beego.GlobalControllerRouter["github.com/louisevanderlith/mango/api/artifact/controllers:UploadController"],
 		beego.ControllerComments{
 			Method: "Post",
 			Router: `/`,

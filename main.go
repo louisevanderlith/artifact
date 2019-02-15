@@ -3,10 +3,10 @@ package main
 import (
 	"log"
 
-	"github.com/louisevanderlith/mango/api/artifact/routers"
-	_ "github.com/louisevanderlith/mango/core/artifact"
-	"github.com/louisevanderlith/mango/pkg"
-	"github.com/louisevanderlith/mango/pkg/enums"
+	"github.com/louisevanderlith/artifact/routers"
+	_ "github.com/louisevanderlith/artifact/core"
+	"github.com/louisevanderlith/mango"
+	"github.com/louisevanderlith/mango/enums"
 
 	"github.com/astaxie/beego"
 )
@@ -21,7 +21,7 @@ func main() {
 
 	// Register with router
 	name := beego.BConfig.AppName
-	srv := util.NewService(mode, name, enums.API)
+	srv := mango.NewService(mode, name, enums.API)
 
 	port := beego.AppConfig.String("httpport")
 	err := srv.Register(port)

@@ -8,7 +8,7 @@ import (
 
 	"github.com/louisevanderlith/husk"
 
-	"github.com/louisevanderlith/mango/core/artifact"
+	"github.com/louisevanderlith/artifact/core"
 )
 
 type InfoHead struct {
@@ -32,13 +32,13 @@ func SaveFile(file multipart.File, header *multipart.FileHeader, info InfoHead) 
 		return husk.CrazyKey(), err
 	}
 
-	blob, mime, err := artifact.NewBLOB(b.Bytes(), info.For)
+	blob, mime, err := core.NewBLOB(b.Bytes(), info.For)
 
 	if err != nil {
 		return husk.CrazyKey(), err
 	}
 
-	upload := artifact.Upload{
+	upload := core.Upload{
 		BLOB:     blob,
 		Size:     copied,
 		Name:     header.Filename,

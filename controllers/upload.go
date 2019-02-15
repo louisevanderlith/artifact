@@ -3,9 +3,9 @@ package controllers
 import (
 	"github.com/louisevanderlith/husk"
 
-	"github.com/louisevanderlith/mango/api/artifact/logic"
-	"github.com/louisevanderlith/mango/core/artifact"
-	"github.com/louisevanderlith/mango/pkg/control"
+	"github.com/louisevanderlith/artifact/core"
+	"github.com/louisevanderlith/artifact/logic"
+	"github.com/louisevanderlith/mango/control"
 )
 
 type UploadController struct {
@@ -21,12 +21,12 @@ func NewUploadCtrl(ctrlMap *control.ControllerMap) *UploadController {
 
 // @Title GetUploads
 // @Description Gets the uploads
-// @Success 200 {[]artifact.Upload} []artifact.Upload
+// @Success 200 {[]core.Upload} []core.Upload
 // @router /all/:pagesize [get]
 func (req *UploadController) Get() {
 	page, size := req.GetPageData()
 
-	results := artifact.GetUploads(page, size)
+	results := core.GetUploads(page, size)
 
 	req.Serve(results, nil)
 }
@@ -34,7 +34,7 @@ func (req *UploadController) Get() {
 // @Title GetUpload
 // @Description Gets the requested upload
 // @Param	uploadKey			path	husk.Key 	true		"Key of the file you require"
-// @Success 200 {artifact.Upload} artifact.Upload
+// @Success 200 {core.Upload} core.Upload
 // @router /:uploadKey [get]
 func (req *UploadController) GetByID() {
 	key, err := husk.ParseKey(req.Ctx.Input.Param(":uploadKey"))
@@ -44,7 +44,7 @@ func (req *UploadController) GetByID() {
 		return
 	}
 
-	req.Serve(artifact.GetUpload(key))
+	req.Serve(core.GetUpload(key))
 }
 
 // @Title GetFile
@@ -63,7 +63,7 @@ func (req *UploadController) GetFileBytes() {
 		return
 	}
 
-	result, filename, err = artifact.GetUploadFile(key)
+	result, filename, err = core.GetUploadFile(key)
 
 	if err != nil {
 		req.Ctx.Output.SetStatus(500)
@@ -76,7 +76,7 @@ func (req *UploadController) GetFileBytes() {
 // @Title UploadFile
 // @Description Upload a file
 // @Param    file        form     file    true        "File"
-// @Param	body		body 	artifact.Upload	true		"body for upload content"
+// @Param	body		body 	core.Upload	true		"body for upload content"
 // @Success 200 {map[string]string} map[string]string
 // @Failure 403 body is empty
 // @router / [post]
