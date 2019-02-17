@@ -19,16 +19,12 @@ import (
 
 func Setup(s *mango.Service) {
 	ctrlmap := EnableFilters(s)
+	uplCtrl := controllers.NewUploadCtrl(ctrlmap)
 
-	ns := beego.NewNamespace("/v1",
-		beego.NSNamespace("/upload",
-			beego.NSInclude(
-				controllers.NewUploadCtrl(ctrlmap),
-			),
-		),
-	)
-
-	beego.AddNamespace(ns)
+	beego.Router("/v1/upload", uplCtrl, "post:Post")
+	beego.Router("/v1/upload/:uploadKey", uplCtrl, "get:GetByID")
+	beego.Router("/v1/upload/all/:pagesize", uplCtrl, "get:Get")
+	beego.Router("/v1/upload/file/:uploadKey", uplCtrl, "get:GetFileBytes")
 }
 
 func EnableFilters(s *mango.Service) *control.ControllerMap {

@@ -1,4 +1,4 @@
-package artifact
+package core
 
 import (
 	"io/ioutil"

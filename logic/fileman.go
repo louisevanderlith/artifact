@@ -24,7 +24,7 @@ func GetInfoHead(header string) (InfoHead, error) {
 	return result, err
 }
 
-func SaveFile(file multipart.File, header *multipart.FileHeader, info InfoHead) (key *husk.Key, err error) {
+func SaveFile(file multipart.File, header *multipart.FileHeader, info InfoHead) (key husk.Key, err error) {
 	var b bytes.Buffer
 	copied, err := io.Copy(&b, file)
 
