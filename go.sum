@@ -34,6 +34,8 @@ github.com/hpcloud/tail v1.0.0/go.mod h1:ab1qPbhIpdTxEkNHXyeSf5vhxWSCs/tWer42PpO
 github.com/lib/pq v1.0.0/go.mod h1:5WUZQaWbwv1U+lTReE5YruASi9Al49XbQIvNi/34Woo=
 github.com/louisevanderlith/husk v0.0.0-20181104041408-83bedc2cf11c h1:1YU9tYeovBkF84nf5D5+CppzZPuGxHW2F2XoazaK7Uw=
 github.com/louisevanderlith/husk v0.0.0-20181104041408-83bedc2cf11c/go.mod h1:FiREVNZW48kA++iCekTEqFLcpe1m31+FQhd1ePm0YLA=
+github.com/louisevanderlith/husk v0.1.0 h1:4xrM+r7HLwONxII2TcvLia/QvVWJfNROp0yacqz5ww8=
+github.com/louisevanderlith/husk v0.1.0/go.mod h1:FiREVNZW48kA++iCekTEqFLcpe1m31+FQhd1ePm0YLA=
 github.com/louisevanderlith/mango v0.0.0-20180402133329-b4a2e74669a5 h1:Gdb5Jf0spPkfvVQHdVNrnZYFnhVmMskqNqZBFKMbXz4=
 github.com/louisevanderlith/mango v0.0.0-20180402133329-b4a2e74669a5/go.mod h1:GJ2ymc1LNW2xxsSKPRudi4egsucbubfIprQC0A2w+h0=
 github.com/louisevanderlith/mango v0.1.4 h1:0iQsYTOBTMGuyvMkNDJl4JW7XPr0FJGQvs7ZiLMRhq0=
@@ -44,6 +46,10 @@ github.com/louisevanderlith/mango v0.1.13 h1:OMid8FJRjK5dtQUIbn3u2R8NLEk5LF9MscP
 github.com/louisevanderlith/mango v0.1.13/go.mod h1:HgTP32VLyeos6GZCfMnPMWT9OcYe313qmL7ZUgfwSFQ=
 github.com/louisevanderlith/mango v0.2.12 h1:yv07wH0qyA6RDrBecyfrWyIIabiaukkHueyYxKD6dF8=
 github.com/louisevanderlith/mango v0.2.12/go.mod h1:HgTP32VLyeos6GZCfMnPMWT9OcYe313qmL7ZUgfwSFQ=
+github.com/louisevanderlith/mango v0.2.20 h1:F4uJV1NQZ5XpzamAOhO3XUdudQ9MMnwj3X+5mR3a/sk=
+github.com/louisevanderlith/mango v0.2.20/go.mod h1:+9RvCkch8S6Tt+EV1pdAUCqh8r0jDdh0L+pYrX8QrcY=
+github.com/louisevanderlith/mango v0.2.21 h1:MHQRyb3eFzK1qKZqEQhl3msel5o+ZdFYq2X/X7vcpdA=
+github.com/louisevanderlith/mango v0.2.21/go.mod h1:+9RvCkch8S6Tt+EV1pdAUCqh8r0jDdh0L+pYrX8QrcY=
 github.com/louisevanderlith/mango/api/artifact v0.0.0-20181202123612-7b97a5d63b55 h1:uXx4YkZFUyYgMP2s3IdBmm+kRndS1hHEbijZNtnzTm4=
 github.com/louisevanderlith/mango/api/artifact v0.0.0-20181202123612-7b97a5d63b55/go.mod h1:fzbCGngsZT5yjwdMeDIZ+uadfMB73AAhQ/wQiXw6I28=
 github.com/louisevanderlith/mango/pkg v0.0.0-20181202123612-7b97a5d63b55/go.mod h1:9j43sMdcux9VY7M8i6fj6Z1Ki8idoOC35cUrqNTW/6w=
