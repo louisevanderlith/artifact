@@ -10,7 +10,7 @@ type context struct {
 
 var ctx context
 
-func init() {
+func CreateContext() {
 	ctx = context{
 		Uploads: husk.NewTable(new(Upload)),
 	}
