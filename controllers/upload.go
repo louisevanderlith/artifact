@@ -81,26 +81,24 @@ func (req *UploadController) GetFileBytes() {
 // @Failure 403 body is empty
 // @router / [post]
 func (req *UploadController) Post() {
-	key := husk.CrazyKey()
-
 	info := req.GetString("info")
 	infoHead, err := logic.GetInfoHead(info)
 
 	if err != nil {
-		req.Serve(key, err)
+		req.Serve(nil, err)
 		return
 	}
 
 	file, header, err := req.GetFile("file")
 
 	if err != nil {
-		req.Serve(key, err)
+		req.Serve(nil, err)
 		return
 	}
 
 	defer file.Close()
 
-	key, err = logic.SaveFile(file, header, infoHead)
+	key, err := logic.SaveFile(file, header, infoHead)
 
 	req.Serve(key, err)
 }

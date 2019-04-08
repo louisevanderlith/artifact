@@ -26,6 +26,8 @@ github.com/louisevanderlith/husk v0.1.0 h1:4xrM+r7HLwONxII2TcvLia/QvVWJfNROp0yac
 github.com/louisevanderlith/husk v0.1.0/go.mod h1:FiREVNZW48kA++iCekTEqFLcpe1m31+FQhd1ePm0YLA=
 github.com/louisevanderlith/husk v0.6.2 h1:RanEIRTTXjRVGet6c1QkD8O7hZT98Gaj81RL71Ge4EY=
 github.com/louisevanderlith/husk v0.6.2/go.mod h1:FiREVNZW48kA++iCekTEqFLcpe1m31+FQhd1ePm0YLA=
+github.com/louisevanderlith/husk v0.6.21 h1:FaQCIlsbGH3B2QVHgS6TrJxEr7xeMYTcpiLMAUwBIhQ=
+github.com/louisevanderlith/husk v0.6.21/go.mod h1:FiREVNZW48kA++iCekTEqFLcpe1m31+FQhd1ePm0YLA=
 github.com/louisevanderlith/mango v0.2.22 h1:TihV2tBV7EjPZnj1Bk/XnSZHOpAWxMQ2HhEb7gmZLyc=
 github.com/louisevanderlith/mango v0.2.22/go.mod h1:+9RvCkch8S6Tt+EV1pdAUCqh8r0jDdh0L+pYrX8QrcY=
 github.com/mattn/go-sqlite3 v1.10.0/go.mod h1:FPy6KqzDD04eiIsT53CuJW3U88zkxoIYsOqkbpncsNc=
