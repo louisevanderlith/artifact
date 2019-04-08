@@ -13,7 +13,7 @@ import (
 
 type InfoHead struct {
 	For      string
-	ItemID   int64
+	ItemKey  husk.Key
 	ItemName string
 }
 
@@ -42,7 +42,7 @@ func SaveFile(file multipart.File, header *multipart.FileHeader, info InfoHead) 
 		BLOB:     blob,
 		Size:     copied,
 		Name:     header.Filename,
-		ItemID:   info.ItemID,
+		ItemKey:  info.ItemKey,
 		ItemName: info.ItemName,
 		MimeType: mime,
 	}

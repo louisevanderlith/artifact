@@ -5,7 +5,7 @@ import (
 )
 
 type Upload struct {
-	ItemID   int64
+	ItemKey  husk.Key
 	ItemName string `hsk:"size(75)"`
 	Name     string `hsk:"size(50)"`
 	MimeType string `hsk:"size(30)"`

@@ -66,7 +66,7 @@ func (req *UploadController) GetFileBytes() {
 	result, filename, err = core.GetUploadFile(key)
 
 	if err != nil {
-		req.Ctx.Output.SetStatus(500)
+		req.Ctx.Output.SetStatus(404)
 		result = []byte(err.Error())
 	}
 
