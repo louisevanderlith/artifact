@@ -12,3 +12,6 @@
 *.out
 
 artifact
+
+db/
+!db/*.seed.json

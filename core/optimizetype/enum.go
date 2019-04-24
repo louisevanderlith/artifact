@@ -24,7 +24,7 @@ func (r Enum) String() string {
 	return optimizeTypes[r]
 }
 
-func GetOptimizeType(name string) Enum {
+func GetEnum(name string) Enum {
 	var result Enum
 
 	for k, v := range optimizeTypes {
