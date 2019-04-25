@@ -47,11 +47,11 @@ func SaveFile(file multipart.File, header *multipart.FileHeader, info InfoHead) 
 		MimeType: mime,
 	}
 
-	rec := upload.Create()
+	rec, err := upload.Create()
 
-	if rec.Error != nil {
-		return husk.CrazyKey(), rec.Error
+	if err != nil {
+		return husk.CrazyKey(), err
 	}
 
-	return rec.Record.GetKey(), nil
+	return rec.GetKey(), nil
 }
