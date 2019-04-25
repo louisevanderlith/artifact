@@ -10,7 +10,7 @@ type Upload struct {
 	Name     string `hsk:"size(50)"`
 	MimeType string `hsk:"size(30)"`
 	Size     int64
-	BLOB     *Blob
+	BLOB     *Blob `json:"-"` //Blob shouldn't be returned in JSON result sets.
 }
 
 func (o Upload) Valid() (bool, error) {
@@ -21,7 +21,7 @@ func GetUploads(page, pagesize int) husk.Collection {
 	return ctx.Uploads.Find(page, pagesize, husk.Everything())
 }
 
-func GetUpload(key husk.Key) (result husk.Recorder, err error) {
+func GetUpload(key husk.Key) (husk.Recorder, error) {
 	return ctx.Uploads.FindByKey(key)
 }
 
@@ -43,6 +43,14 @@ func GetUploadsBySize(size int64) husk.Collection {
 	return ctx.Uploads.Find(1, 50, bySize(size))
 }
 
-func (upload Upload) Create() husk.CreateSet {
-	return ctx.Uploads.Create(upload)
+func (upload Upload) Create() (husk.Recorder, error) {
+	rec := ctx.Uploads.Create(upload)
+
+	if rec.Error != nil {
+		return nil, rec.Error
+	}
+
+	ctx.Uploads.Save()
+
+	return rec.Record, nil
 }

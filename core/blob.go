@@ -7,7 +7,7 @@ import (
 	"image"
 
 	"github.com/disintegration/imaging"
-	"github.com/louisevanderlith/mango/enums"
+	"github.com/louisevanderlith/artifact/core/optimizetype"
 )
 
 type Blob struct {
@@ -15,7 +15,7 @@ type Blob struct {
 }
 
 type optimFunc func(data image.Image) (result []byte, mimetype string, err error)
-type optmizer map[enums.OptimizeType]optimFunc
+type optmizer map[optimizetype.Enum]optimFunc
 
 var optimizers optmizer
 
@@ -30,13 +30,13 @@ func (o Blob) Valid() (bool, error) {
 func NewBLOB(data []byte, purpose string) (*Blob, string, error) {
 	result := &Blob{Data: data}
 
-	targetType := enums.GetOptimizeType(purpose)
+	targetType := optimizetype.GetEnum(purpose)
 	mime, err := result.OptimizeFor(targetType)
 
 	return result, mime, err
 }
 
-func (o *Blob) OptimizeFor(oType enums.OptimizeType) (string, error) {
+func (o *Blob) OptimizeFor(oType optimizetype.Enum) (string, error) {
 	reader := bytes.NewReader(o.Data)
 	decoded, err := imaging.Decode(reader)
 
@@ -64,10 +64,10 @@ func (o *Blob) OptimizeFor(oType enums.OptimizeType) (string, error) {
 func getOptimizers() optmizer {
 	result := make(optmizer)
 
-	result[enums.Logo] = optimizeLogo
-	result[enums.Banner] = optimizeBanner
-	result[enums.Ad] = optimizeAd
-	result[enums.Thumb] = optimizeThumb
+	result[optimizetype.Logo] = optimizeLogo
+	result[optimizetype.Banner] = optimizeBanner
+	result[optimizetype.Ad] = optimizeAd
+	result[optimizetype.Thumb] = optimizeThumb
 
 	return result
 }
