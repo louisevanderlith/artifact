@@ -10,7 +10,7 @@ type Upload struct {
 	Name     string `hsk:"size(50)"`
 	MimeType string `hsk:"size(30)"`
 	Size     int64
-	BLOB     *Blob
+	BLOB     *Blob `json:"-"` //Blob shouldn't be returned in JSON result sets.
 }
 
 func (o Upload) Valid() (bool, error) {
