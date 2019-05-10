@@ -34,9 +34,9 @@ func EnableFilters(s *mango.Service) *control.ControllerMap {
 	emptyMap := make(secure.ActionMap)
 	emptyMap["POST"] = roletype.Owner
 
-	ctrlmap.Add("/upload", emptyMap)
+	ctrlmap.Add("/v1/upload", emptyMap)
 
-	beego.InsertFilter("/*", beego.BeforeRouter, ctrlmap.FilterAPI)
+	beego.InsertFilter("/v1/*", beego.BeforeRouter, ctrlmap.FilterAPI)
 
 	beego.InsertFilter("*", beego.BeforeRouter, cors.Allow(&cors.Options{
 		AllowAllOrigins: true,

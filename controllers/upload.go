@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"net/http"
+
 	"github.com/louisevanderlith/husk"
 
 	"github.com/louisevanderlith/artifact/core"
@@ -28,7 +30,7 @@ func (req *UploadController) Get() {
 
 	results := core.GetUploads(page, size)
 
-	req.Serve(results, nil)
+	req.Serve(http.StatusOK, nil, results)
 }
 
 // @Title GetUpload
@@ -40,11 +42,18 @@ func (req *UploadController) GetByID() {
 	key, err := husk.ParseKey(req.Ctx.Input.Param(":uploadKey"))
 
 	if err != nil {
-		req.Serve(nil, err)
+		req.Serve(http.StatusBadRequest, err, nil)
 		return
 	}
 
-	req.Serve(core.GetUpload(key))
+	record, err := core.GetUpload(key)
+
+	if err != nil {
+		req.Serve(http.StatusNotFound, err, nil)
+		return
+	}
+
+	req.Serve(http.StatusOK, nil, record)
 }
 
 // @Title GetFile
@@ -85,14 +94,14 @@ func (req *UploadController) Post() {
 	infoHead, err := logic.GetInfoHead(info)
 
 	if err != nil {
-		req.Serve(nil, err)
+		req.Serve(http.StatusInternalServerError, err, nil)
 		return
 	}
 
 	file, header, err := req.GetFile("file")
 
 	if err != nil {
-		req.Serve(nil, err)
+		req.Serve(http.StatusBadRequest, err, nil)
 		return
 	}
 
@@ -100,5 +109,10 @@ func (req *UploadController) Post() {
 
 	key, err := logic.SaveFile(file, header, infoHead)
 
-	req.Serve(key, err)
+	if err != nil {
+		req.Serve(http.StatusInternalServerError, err, nil)
+		return
+	}
+
+	req.Serve(http.StatusOK, nil, key)
 }
