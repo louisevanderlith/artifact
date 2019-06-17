@@ -19,7 +19,7 @@ func Setup(s *mango.Service, host string) {
 	uplCtrl := controllers.NewUploadCtrl(ctrlmap)
 
 	beego.Router("/v1/upload", uplCtrl, "post:Post")
-	beego.Router("/v1/upload/:uploadKey", uplCtrl, "get:GetByID")
+	beego.Router("/v1/upload/:uploadKey", uplCtrl, "get:GetByID;delete:Delete")
 	beego.Router("/v1/upload/all/:pagesize", uplCtrl, "get:Get")
 	beego.Router("/v1/upload/file/:uploadKey", uplCtrl, "get:GetFileBytes")
 }
@@ -29,6 +29,7 @@ func EnableFilters(s *mango.Service, host string) *control.ControllerMap {
 
 	emptyMap := make(secure.ActionMap)
 	emptyMap["POST"] = roletype.Owner
+	emptyMap["DELETE"] = roletype.Admin
 
 	ctrlmap.Add("/v1/upload", emptyMap)
 
@@ -37,7 +38,7 @@ func EnableFilters(s *mango.Service, host string) *control.ControllerMap {
 
 	beego.InsertFilter("*", beego.BeforeRouter, cors.Allow(&cors.Options{
 		AllowOrigins: []string{allowed},
-		AllowMethods: []string{"GET", "POST", "OPTIONS"},
+		AllowMethods: []string{"GET", "POST", "DELETE", "OPTIONS"},
 	}), false)
 
 	return ctrlmap

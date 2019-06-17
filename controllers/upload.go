@@ -116,3 +116,22 @@ func (req *UploadController) Post() {
 
 	req.Serve(http.StatusOK, nil, key)
 }
+
+// @router /:uploadKey [delete]
+func (req *UploadController) Delete() {
+	key, err := husk.ParseKey(req.Ctx.Input.Param(":uploadKey"))
+
+	if err != nil {
+		req.Serve(http.StatusBadRequest, err, nil)
+		return
+	}
+
+	err = core.RemoveUpload(key)
+
+	if err != nil {
+		req.Serve(http.StatusInternalServerError, err, nil)
+		return
+	}
+
+	req.Serve(http.StatusOK, nil, "Completed")
+}
