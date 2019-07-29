@@ -1,29 +1,33 @@
 package routers
 
 import (
-	"fmt"
-	"strings"
-
 	"github.com/louisevanderlith/artifact/controllers"
-	"github.com/louisevanderlith/mango"
+	"github.com/louisevanderlith/droxolite"
 
-	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/plugins/cors"
-	"github.com/louisevanderlith/mango/control"
-	secure "github.com/louisevanderlith/secure/core"
-	"github.com/louisevanderlith/secure/core/roletype"
+	"github.com/louisevanderlith/droxolite/roletype"
 )
 
-func Setup(s *mango.Service, host string) {
-	ctrlmap := EnableFilters(s, host)
-	uplCtrl := controllers.NewUploadCtrl(ctrlmap)
+func Setup(poxy *droxolite.Epoxy) {
+	//Upload
+	uplCtrl := &controllers.UploadController{}
+	uplGroup := droxolite.NewRouteGroup("upload", uplCtrl)
+	uplGroup.AddRoute("/", "POST", roletype.Owner, uplCtrl.Post)
+	uplGroup.AddRoute("/{uploadKey:[0-9]+\x60[0-9]+}", "GET", roletype.Unknown, uplCtrl.GetByID)
+	uplGroup.AddRoute("/{uploadKey:[0-9]+\x60[0-9]+}", "DELETE", roletype.Admin, uplCtrl.Delete)
+	uplGroup.AddRoute("/file/{uploadKey:[0-9]+\x60[0-9]+}", "GET", roletype.Unknown, uplCtrl.GetFileBytes)
+	uplGroup.AddRoute("/all/{pagesize:[A-Z][0-9]+}", "GET", roletype.Admin, uplCtrl.Get)
+	poxy.AddGroup(uplGroup)
+	/*
+		ctrlmap := EnableFilters(s, host)
+		uplCtrl := controllers.NewUploadCtrl(ctrlmap)
 
-	beego.Router("/v1/upload", uplCtrl, "post:Post")
-	beego.Router("/v1/upload/:uploadKey", uplCtrl, "get:GetByID;delete:Delete")
-	beego.Router("/v1/upload/all/:pagesize", uplCtrl, "get:Get")
-	beego.Router("/v1/upload/file/:uploadKey", uplCtrl, "get:GetFileBytes")
+		beego.Router("/v1/upload", uplCtrl, "post:Post")
+		beego.Router("/v1/upload/:uploadKey", uplCtrl, "get:GetByID;delete:Delete")
+		beego.Router("/v1/upload/all/:pagesize", uplCtrl, "get:Get")
+		beego.Router("/v1/upload/file/:uploadKey", uplCtrl, "get:GetFileBytes")*/
 }
 
+/*
 func EnableFilters(s *mango.Service, host string) *control.ControllerMap {
 	ctrlmap := control.CreateControlMap(s)
 
@@ -43,3 +47,4 @@ func EnableFilters(s *mango.Service, host string) *control.ControllerMap {
 
 	return ctrlmap
 }
+*/

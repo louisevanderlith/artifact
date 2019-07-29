@@ -24,6 +24,7 @@ func NewBLOB(data []byte, purpose string) ([]byte, string, error) {
 	return OptimizeFor(data, targetType)
 }
 
+//OptimizeFor returns the new Bytes, MIME Type and an error
 func OptimizeFor(data []byte, oType optimizetype.Enum) ([]byte, string, error) {
 	reader := bytes.NewReader(data)
 	decoded, err := imaging.Decode(reader)

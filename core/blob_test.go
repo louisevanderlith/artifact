@@ -6,7 +6,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/louisevanderlith/mango/enums"
+	"github.com/louisevanderlith/artifact/core/optimizetype"
 )
 
 func getImage(location string) []byte {
@@ -28,16 +28,15 @@ func TestBlob_OptimizeFor_Logo_PNG2PNG(t *testing.T) {
 	writeLocation := "./testData/" + resultName
 	os.Remove(writeLocation)
 
-	data := Blob{}
-	data.Data = getImage("./test.png")
+	data := getImage("./test.png")
 
-	err := data.OptimizeFor(enums.Logo)
+	bits, _, err := OptimizeFor(data, optimizetype.Logo)
 
 	if err != nil {
 		t.Error("Error occurred:", err)
 	}
 
-	saveImage(writeLocation, data.Data)
+	saveImage(writeLocation, bits)
 }
 
 func TestBlob_OptimizeFor_Logo_JPG2PNG(t *testing.T) {
@@ -45,16 +44,15 @@ func TestBlob_OptimizeFor_Logo_JPG2PNG(t *testing.T) {
 	writeLocation := "./testData/" + resultName
 	os.Remove(writeLocation)
 
-	data := Blob{}
-	data.Data = getImage("./test.jpg")
+	data := getImage("./test.jpg")
 
-	err := data.OptimizeFor(enums.Logo)
+	bits, _, err := OptimizeFor(data, optimizetype.Logo)
 
 	if err != nil {
 		t.Error("Error occurred:", err)
 	}
 
-	saveImage(writeLocation, data.Data)
+	saveImage(writeLocation, bits)
 }
 
 func TestBlob_OptimizeFor_Banner_PNG2JPG(t *testing.T) {
@@ -62,16 +60,15 @@ func TestBlob_OptimizeFor_Banner_PNG2JPG(t *testing.T) {
 	writeLocation := "./testData/" + resultName
 	os.Remove(writeLocation)
 
-	data := Blob{}
-	data.Data = getImage("./test.png")
+	data := getImage("./test.png")
 
-	err := data.OptimizeFor(enums.Banner)
+	bits, _, err := OptimizeFor(data, optimizetype.Banner)
 
 	if err != nil {
 		t.Error("Error occurred:", err)
 	}
 
-	saveImage(writeLocation, data.Data)
+	saveImage(writeLocation, bits)
 }
 
 func TestBlob_OptimizeFor_Banner_JPG2JPG(t *testing.T) {
@@ -79,16 +76,15 @@ func TestBlob_OptimizeFor_Banner_JPG2JPG(t *testing.T) {
 	writeLocation := "./testData/" + resultName
 	os.Remove(writeLocation)
 
-	data := Blob{}
-	data.Data = getImage("./test.jpg")
+	data := getImage("./test.jpg")
 
-	err := data.OptimizeFor(enums.Banner)
+	bits, _, err := OptimizeFor(data, optimizetype.Banner)
 
 	if err != nil {
 		t.Error("Error occurred:", err)
 	}
 
-	saveImage(writeLocation, data.Data)
+	saveImage(writeLocation, bits)
 }
 
 func TestBlob_OptimizeFor_Ad_PNG2JPG(t *testing.T) {
@@ -96,16 +92,15 @@ func TestBlob_OptimizeFor_Ad_PNG2JPG(t *testing.T) {
 	writeLocation := "./testData/" + resultName
 	os.Remove(writeLocation)
 
-	data := Blob{}
-	data.Data = getImage("./test.png")
+	data := getImage("./test.png")
 
-	err := data.OptimizeFor(enums.Ad)
+	bits, _, err := OptimizeFor(data, optimizetype.Ad)
 
 	if err != nil {
 		t.Error("Error occurred:", err)
 	}
 
-	saveImage(writeLocation, data.Data)
+	saveImage(writeLocation, bits)
 }
 
 func TestBlob_OptimizeFor_Ad_JPG2JPG(t *testing.T) {
@@ -113,16 +108,15 @@ func TestBlob_OptimizeFor_Ad_JPG2JPG(t *testing.T) {
 	writeLocation := "./testData/" + resultName
 	os.Remove(writeLocation)
 
-	data := Blob{}
-	data.Data = getImage("./test.jpg")
+	data := getImage("./test.jpg")
 
-	err := data.OptimizeFor(enums.Ad)
+	bits, _, err := OptimizeFor(data, optimizetype.Ad)
 
 	if err != nil {
 		t.Error("Error occurred:", err)
 	}
 
-	saveImage(writeLocation, data.Data)
+	saveImage(writeLocation, bits)
 }
 
 func TestBlob_OptimizeFor_Thumb_PNG2JPG(t *testing.T) {
@@ -130,16 +124,15 @@ func TestBlob_OptimizeFor_Thumb_PNG2JPG(t *testing.T) {
 	writeLocation := "./testData/" + resultName
 	os.Remove(writeLocation)
 
-	data := Blob{}
-	data.Data = getImage("./test.png")
+	data := getImage("./test.png")
 
-	err := data.OptimizeFor(enums.Thumb)
+	bits, _, err := OptimizeFor(data, optimizetype.Thumb)
 
 	if err != nil {
 		t.Error("Error occurred:", err)
 	}
 
-	saveImage(writeLocation, data.Data)
+	saveImage(writeLocation, bits)
 }
 
 func TestBlob_OptimizeFor_Thumb_JPG2JPG(t *testing.T) {
@@ -147,16 +140,15 @@ func TestBlob_OptimizeFor_Thumb_JPG2JPG(t *testing.T) {
 	writeLocation := "./testData/" + resultName
 	os.Remove(writeLocation)
 
-	data := Blob{}
-	data.Data = getImage("./test.jpg")
+	data := getImage("./test.jpg")
 
-	err := data.OptimizeFor(enums.Thumb)
+	bits, _, err := OptimizeFor(data, optimizetype.Thumb)
 
 	if err != nil {
 		t.Error("Error occurred:", err)
 	}
 
-	saveImage(writeLocation, data.Data)
+	saveImage(writeLocation, bits)
 }
 
 func TestBlob_OptimizeFor_Ad(t *testing.T) {
@@ -164,19 +156,17 @@ func TestBlob_OptimizeFor_Ad(t *testing.T) {
 	writeLocation := "./testData/" + resultName
 	os.Remove(writeLocation)
 
-	data := Blob{}
-	data.Data = getImage("./logo.png")
+	data := getImage("./logo.png")
 
-	err := data.OptimizeFor(enums.Logo)
+	bits, _, err := OptimizeFor(data, optimizetype.Logo)
 
 	if err != nil {
 		t.Error("Error occurred:", err)
 	}
 
-	objData := data.Data
-	t.Log(len(objData))
-	if len(objData) > 0 {
-		saveImage(writeLocation, objData)
+	t.Log(len(bits))
+	if len(bits) > 0 {
+		saveImage(writeLocation, bits)
 	} else {
 		t.Error("Image Zero")
 	}
