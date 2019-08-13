@@ -10,10 +10,6 @@ import (
 	"github.com/louisevanderlith/artifact/core/optimizetype"
 )
 
-type Blob struct {
-	Data []byte
-}
-
 type optimFunc func(data image.Image) (result []byte, mimetype string, err error)
 type optmizer map[optimizetype.Enum]optimFunc
 
@@ -23,42 +19,27 @@ func init() {
 	optimizers = getOptimizers()
 }
 
-func (o Blob) Valid() (bool, error) {
-	return true, nil
-}
-
-func NewBLOB(data []byte, purpose string) (*Blob, string, error) {
-	result := &Blob{Data: data}
-
+func NewBLOB(data []byte, purpose string) ([]byte, string, error) {
 	targetType := optimizetype.GetEnum(purpose)
-	mime, err := result.OptimizeFor(targetType)
-
-	return result, mime, err
+	return OptimizeFor(data, targetType)
 }
 
-func (o *Blob) OptimizeFor(oType optimizetype.Enum) (string, error) {
-	reader := bytes.NewReader(o.Data)
+//OptimizeFor returns the new Bytes, MIME Type and an error
+func OptimizeFor(data []byte, oType optimizetype.Enum) ([]byte, string, error) {
+	reader := bytes.NewReader(data)
 	decoded, err := imaging.Decode(reader)
 
 	if err != nil {
-		return "", err
+		return nil, "", err
 	}
 
 	opt, hasOpt := optimizers[oType]
 
 	if !hasOpt {
-		return "", errors.New("optimizer Type not found")
+		return nil, "", errors.New("optimizer Type not found")
 	}
 
-	data, mime, err := opt(decoded)
-
-	if err != nil {
-		return "", err
-	}
-
-	o.Data = data
-
-	return mime, err
+	return opt(decoded)
 }
 
 func getOptimizers() optmizer {

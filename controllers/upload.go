@@ -7,18 +7,11 @@ import (
 
 	"github.com/louisevanderlith/artifact/core"
 	"github.com/louisevanderlith/artifact/logic"
-	"github.com/louisevanderlith/mango/control"
+	"github.com/louisevanderlith/droxolite/xontrols"
 )
 
 type UploadController struct {
-	control.APIController
-}
-
-func NewUploadCtrl(ctrlMap *control.ControllerMap) *UploadController {
-	result := &UploadController{}
-	result.SetInstanceMap(ctrlMap)
-
-	return result
+	xontrols.APICtrl
 }
 
 // @Title GetUploads
@@ -39,7 +32,7 @@ func (req *UploadController) Get() {
 // @Success 200 {core.Upload} core.Upload
 // @router /:uploadKey [get]
 func (req *UploadController) GetByID() {
-	key, err := husk.ParseKey(req.Ctx.Input.Param(":uploadKey"))
+	key, err := husk.ParseKey(req.FindParam("uploadKey"))
 
 	if err != nil {
 		req.Serve(http.StatusBadRequest, err, nil)
@@ -64,10 +57,10 @@ func (req *UploadController) GetByID() {
 func (req *UploadController) GetFileBytes() {
 	var result []byte
 	var filename string
-	key, err := husk.ParseKey(req.Ctx.Input.Param(":uploadKey"))
+	key, err := husk.ParseKey(req.FindParam("uploadKey"))
 
 	if err != nil {
-		req.Ctx.Output.SetStatus(500)
+		req.Ctx().SetStatus(500)
 		req.ServeBinary([]byte(err.Error()), "")
 		return
 	}
@@ -75,7 +68,7 @@ func (req *UploadController) GetFileBytes() {
 	result, filename, err = core.GetUploadFile(key)
 
 	if err != nil {
-		req.Ctx.Output.SetStatus(404)
+		req.Ctx().SetStatus(404)
 		result = []byte(err.Error())
 	}
 
@@ -90,7 +83,7 @@ func (req *UploadController) GetFileBytes() {
 // @Failure 403 body is empty
 // @router / [post]
 func (req *UploadController) Post() {
-	info := req.GetString("info")
+	info := req.Ctx().FindQueryParam("info")
 	infoHead, err := logic.GetInfoHead(info)
 
 	if err != nil {
@@ -98,7 +91,7 @@ func (req *UploadController) Post() {
 		return
 	}
 
-	file, header, err := req.GetFile("file")
+	file, header, err := req.Ctx().File("file")
 
 	if err != nil {
 		req.Serve(http.StatusBadRequest, err, nil)
@@ -115,4 +108,23 @@ func (req *UploadController) Post() {
 	}
 
 	req.Serve(http.StatusOK, nil, key)
+}
+
+// @router /:uploadKey [delete]
+func (req *UploadController) Delete() {
+	key, err := husk.ParseKey(req.FindParam("uploadKey"))
+
+	if err != nil {
+		req.Serve(http.StatusBadRequest, err, nil)
+		return
+	}
+
+	err = core.RemoveUpload(key)
+
+	if err != nil {
+		req.Serve(http.StatusInternalServerError, err, nil)
+		return
+	}
+
+	req.Serve(http.StatusOK, nil, "Completed")
 }

@@ -10,7 +10,7 @@ type Upload struct {
 	Name     string `hsk:"size(50)"`
 	MimeType string `hsk:"size(30)"`
 	Size     int64
-	BLOB     *Blob `json:"-"` //Blob shouldn't be returned in JSON result sets.
+	BLOB     []byte `json:"-"` //Blob shouldn't be returned in JSON result sets.
 }
 
 func (o Upload) Valid() (bool, error) {
@@ -33,7 +33,7 @@ func GetUploadFile(key husk.Key) (result []byte, filename string, err error) {
 	}
 
 	uploadData := upload.Data().(*Upload)
-	blob := uploadData.BLOB.Data
+	blob := uploadData.BLOB
 
 	return blob, uploadData.Name, err
 }
@@ -43,6 +43,11 @@ func GetUploadsBySize(size int64) husk.Collection {
 	return ctx.Uploads.Find(1, 50, bySize(size))
 }
 
+func RemoveUpload(key husk.Key) error {
+	defer ctx.Uploads.Save()
+	return ctx.Uploads.Delete(key)
+}
+
 func (upload Upload) Create() (husk.Recorder, error) {
 	rec := ctx.Uploads.Create(upload)
 
@@ -50,7 +55,7 @@ func (upload Upload) Create() (husk.Recorder, error) {
 		return nil, rec.Error
 	}
 
-	ctx.Uploads.Save()
+	defer ctx.Uploads.Save()
 
 	return rec.Record, nil
 }
