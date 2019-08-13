@@ -11,11 +11,11 @@ func Setup(poxy *droxolite.Epoxy) {
 	//Upload
 	uplCtrl := &controllers.UploadController{}
 	uplGroup := droxolite.NewRouteGroup("upload", uplCtrl)
-	uplGroup.AddRoute("/", "POST", roletype.Owner, uplCtrl.Post)
-	uplGroup.AddRoute("/{uploadKey:[0-9]+\x60[0-9]+}", "GET", roletype.Unknown, uplCtrl.GetByID)
-	uplGroup.AddRoute("/{uploadKey:[0-9]+\x60[0-9]+}", "DELETE", roletype.Admin, uplCtrl.Delete)
-	uplGroup.AddRoute("/file/{uploadKey:[0-9]+\x60[0-9]+}", "GET", roletype.Unknown, uplCtrl.GetFileBytes)
-	uplGroup.AddRoute("/all/{pagesize:[A-Z][0-9]+}", "GET", roletype.Admin, uplCtrl.Get)
+	uplGroup.AddRoute("Create Upload", "/", "POST", roletype.Owner, uplCtrl.Post)
+	uplGroup.AddRoute("Get Upload By ID", "/{uploadKey:[0-9]+\x60[0-9]+}", "GET", roletype.Unknown, uplCtrl.GetByID)
+	uplGroup.AddRoute("Delete Upload", "/{uploadKey:[0-9]+\x60[0-9]+}", "DELETE", roletype.Admin, uplCtrl.Delete)
+	uplGroup.AddRoute("Get Upload Raw", "/file/{uploadKey:[0-9]+\x60[0-9]+}", "GET", roletype.Unknown, uplCtrl.GetFileBytes)
+	uplGroup.AddRoute("Get All Uploads", "/all/{pagesize:[A-Z][0-9]+}", "GET", roletype.Admin, uplCtrl.Get)
 	poxy.AddGroup(uplGroup)
 	/*
 		ctrlmap := EnableFilters(s, host)
