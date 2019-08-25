@@ -2,49 +2,23 @@ package routers
 
 import (
 	"github.com/louisevanderlith/artifact/controllers"
-	"github.com/louisevanderlith/droxolite"
+	"github.com/louisevanderlith/droxolite/mix"
 
+	"github.com/louisevanderlith/droxolite/resins"
 	"github.com/louisevanderlith/droxolite/roletype"
+	"github.com/louisevanderlith/droxolite/routing"
 )
 
-func Setup(poxy *droxolite.Epoxy) {
+func Setup(poxy resins.Epoxi) {
 	//Upload
 	uplCtrl := &controllers.UploadController{}
-	uplGroup := droxolite.NewRouteGroup("upload", uplCtrl)
-	uplGroup.AddRoute("Create Upload", "/", "POST", roletype.Owner, uplCtrl.Post)
+	uplGroup := routing.NewRouteGroup("upload", mix.JSON)
+	uplGroup.AddRoute("Create Upload", "", "POST", roletype.Owner, uplCtrl.Post)
 	uplGroup.AddRoute("Get Upload By ID", "/{uploadKey:[0-9]+\x60[0-9]+}", "GET", roletype.Unknown, uplCtrl.GetByID)
 	uplGroup.AddRoute("Delete Upload", "/{uploadKey:[0-9]+\x60[0-9]+}", "DELETE", roletype.Admin, uplCtrl.Delete)
-	uplGroup.AddRoute("Get Upload Raw", "/file/{uploadKey:[0-9]+\x60[0-9]+}", "GET", roletype.Unknown, uplCtrl.GetFileBytes)
 	uplGroup.AddRoute("Get All Uploads", "/all/{pagesize:[A-Z][0-9]+}", "GET", roletype.Admin, uplCtrl.Get)
 	poxy.AddGroup(uplGroup)
-	/*
-		ctrlmap := EnableFilters(s, host)
-		uplCtrl := controllers.NewUploadCtrl(ctrlmap)
 
-		beego.Router("/v1/upload", uplCtrl, "post:Post")
-		beego.Router("/v1/upload/:uploadKey", uplCtrl, "get:GetByID;delete:Delete")
-		beego.Router("/v1/upload/all/:pagesize", uplCtrl, "get:Get")
-		beego.Router("/v1/upload/file/:uploadKey", uplCtrl, "get:GetFileBytes")*/
+	downGroup := routing.NewRouteGroup("download", mix.Octet)
+	downGroup.AddRoute("Get Upload Raw", "/{uploadKey:[0-9]+\x60[0-9]+}", "GET", roletype.Unknown, controllers.GetFileBytes)
 }
-
-/*
-func EnableFilters(s *mango.Service, host string) *control.ControllerMap {
-	ctrlmap := control.CreateControlMap(s)
-
-	emptyMap := make(secure.ActionMap)
-	emptyMap["POST"] = roletype.Owner
-	emptyMap["DELETE"] = roletype.Admin
-
-	ctrlmap.Add("/v1/upload", emptyMap)
-
-	beego.InsertFilter("/v1/*", beego.BeforeRouter, ctrlmap.FilterAPI, false)
-	allowed := fmt.Sprintf("https://*%s", strings.TrimSuffix(host, "/"))
-
-	beego.InsertFilter("*", beego.BeforeRouter, cors.Allow(&cors.Options{
-		AllowOrigins: []string{allowed},
-		AllowMethods: []string{"GET", "POST", "DELETE", "OPTIONS"},
-	}), false)
-
-	return ctrlmap
-}
-*/

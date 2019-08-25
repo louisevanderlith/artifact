@@ -1,29 +1,31 @@
 package controllers
 
 import (
+	"bytes"
+	"io"
+	"log"
 	"net/http"
 
+	"github.com/louisevanderlith/droxolite/context"
 	"github.com/louisevanderlith/husk"
 
 	"github.com/louisevanderlith/artifact/core"
 	"github.com/louisevanderlith/artifact/logic"
-	"github.com/louisevanderlith/droxolite/xontrols"
 )
 
 type UploadController struct {
-	xontrols.APICtrl
 }
 
 // @Title GetUploads
 // @Description Gets the uploads
 // @Success 200 {[]core.Upload} []core.Upload
 // @router /all/:pagesize [get]
-func (req *UploadController) Get() {
-	page, size := req.GetPageData()
+func (req *UploadController) Get(ctx context.Contexer) (int, interface{}) {
+	page, size := ctx.GetPageData()
 
 	results := core.GetUploads(page, size)
 
-	req.Serve(http.StatusOK, nil, results)
+	return http.StatusOK, results
 }
 
 // @Title GetUpload
@@ -31,48 +33,20 @@ func (req *UploadController) Get() {
 // @Param	uploadKey			path	husk.Key 	true		"Key of the file you require"
 // @Success 200 {core.Upload} core.Upload
 // @router /:uploadKey [get]
-func (req *UploadController) GetByID() {
-	key, err := husk.ParseKey(req.FindParam("uploadKey"))
+func (req *UploadController) GetByID(ctx context.Contexer) (int, interface{}) {
+	key, err := husk.ParseKey(ctx.FindParam("uploadKey"))
 
 	if err != nil {
-		req.Serve(http.StatusBadRequest, err, nil)
-		return
+		return http.StatusBadRequest, err
 	}
 
 	record, err := core.GetUpload(key)
 
 	if err != nil {
-		req.Serve(http.StatusNotFound, err, nil)
-		return
+		return http.StatusNotFound, err
 	}
 
-	req.Serve(http.StatusOK, nil, record)
-}
-
-// @Title GetFile
-// @Description Gets the requested file only
-// @Param	uploadID			path	int64 	true		"ID of the file you require"
-// @Success 200 {[]byte} []byte
-// @router /file/:uploadKey [get]
-func (req *UploadController) GetFileBytes() {
-	var result []byte
-	var filename string
-	key, err := husk.ParseKey(req.FindParam("uploadKey"))
-
-	if err != nil {
-		req.Ctx().SetStatus(500)
-		req.ServeBinary([]byte(err.Error()), "")
-		return
-	}
-
-	result, filename, err = core.GetUploadFile(key)
-
-	if err != nil {
-		req.Ctx().SetStatus(404)
-		result = []byte(err.Error())
-	}
-
-	req.ServeBinary(result, filename)
+	return http.StatusOK, record
 }
 
 // @Title UploadFile
@@ -82,49 +56,55 @@ func (req *UploadController) GetFileBytes() {
 // @Success 200 {map[string]string} map[string]string
 // @Failure 403 body is empty
 // @router / [post]
-func (req *UploadController) Post() {
-	info := req.Ctx().FindQueryParam("info")
-	infoHead, err := logic.GetInfoHead(info)
+func (req *UploadController) Post(ctx context.Contexer) (int, interface{}) {
+	file, header, err := ctx.File("file")
 
 	if err != nil {
-		req.Serve(http.StatusInternalServerError, err, nil)
-		return
-	}
-
-	file, header, err := req.Ctx().File("file")
-
-	if err != nil {
-		req.Serve(http.StatusBadRequest, err, nil)
-		return
+		return http.StatusBadRequest, err
 	}
 
 	defer file.Close()
 
-	key, err := logic.SaveFile(file, header, infoHead)
+	info := ctx.FindFormValue("info")
+	infoHead, err := logic.GetInfoHead(info)
 
 	if err != nil {
-		req.Serve(http.StatusInternalServerError, err, nil)
-		return
+		log.Println(err)
+		return http.StatusInternalServerError, err
 	}
 
-	req.Serve(http.StatusOK, nil, key)
-}
+	log.Printf("Size: %v\tKey: %s\r", header.Size, infoHead.ItemKey.String())
 
-// @router /:uploadKey [delete]
-func (req *UploadController) Delete() {
-	key, err := husk.ParseKey(req.FindParam("uploadKey"))
+	var b bytes.Buffer
+	copied, err := io.Copy(&b, file)
 
 	if err != nil {
-		req.Serve(http.StatusBadRequest, err, nil)
-		return
+		return http.StatusInternalServerError, err
+	}
+
+	key, err := logic.SaveFile(b.Bytes(), copied, header, infoHead)
+
+	if err != nil {
+		panic(err)
+		return http.StatusInternalServerError, err
+	}
+
+	return http.StatusOK, key
+}
+
+// @router /:uploadKey [delte]
+func (req *UploadController) Delete(ctx context.Contexer) (int, interface{}) {
+	key, err := husk.ParseKey(ctx.FindParam("uploadKey"))
+
+	if err != nil {
+		return http.StatusBadRequest, err
 	}
 
 	err = core.RemoveUpload(key)
 
 	if err != nil {
-		req.Serve(http.StatusInternalServerError, err, nil)
-		return
+		return http.StatusInternalServerError, err
 	}
 
-	req.Serve(http.StatusOK, nil, "Completed")
+	return http.StatusOK, "Completed"
 }
