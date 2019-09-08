@@ -13,14 +13,20 @@ import (
 	"github.com/louisevanderlith/artifact/logic"
 )
 
-type UploadController struct {
+type Upload struct {
+}
+
+func (req *Upload) Get(ctx context.Requester) (int, interface{}) {
+	results := core.GetUploads(1, 10)
+
+	return http.StatusOK, results
 }
 
 // @Title GetUploads
 // @Description Gets the uploads
 // @Success 200 {[]core.Upload} []core.Upload
 // @router /all/:pagesize [get]
-func (req *UploadController) Get(ctx context.Contexer) (int, interface{}) {
+func (req *Upload) Search(ctx context.Requester) (int, interface{}) {
 	page, size := ctx.GetPageData()
 
 	results := core.GetUploads(page, size)
@@ -33,7 +39,7 @@ func (req *UploadController) Get(ctx context.Contexer) (int, interface{}) {
 // @Param	uploadKey			path	husk.Key 	true		"Key of the file you require"
 // @Success 200 {core.Upload} core.Upload
 // @router /:uploadKey [get]
-func (req *UploadController) GetByID(ctx context.Contexer) (int, interface{}) {
+func (req *Upload) View(ctx context.Requester) (int, interface{}) {
 	key, err := husk.ParseKey(ctx.FindParam("uploadKey"))
 
 	if err != nil {
@@ -56,7 +62,7 @@ func (req *UploadController) GetByID(ctx context.Contexer) (int, interface{}) {
 // @Success 200 {map[string]string} map[string]string
 // @Failure 403 body is empty
 // @router / [post]
-func (req *UploadController) Post(ctx context.Contexer) (int, interface{}) {
+func (req *Upload) Create(ctx context.Requester) (int, interface{}) {
 	file, header, err := ctx.File("file")
 
 	if err != nil {
@@ -92,8 +98,12 @@ func (req *UploadController) Post(ctx context.Contexer) (int, interface{}) {
 	return http.StatusOK, key
 }
 
+func (req *Upload) Update(ctx context.Requester) (int, interface{}) {
+	return http.StatusMethodNotAllowed, nil
+}
+
 // @router /:uploadKey [delte]
-func (req *UploadController) Delete(ctx context.Contexer) (int, interface{}) {
+func (req *Upload) Delete(ctx context.Requester) (int, interface{}) {
 	key, err := husk.ParseKey(ctx.FindParam("uploadKey"))
 
 	if err != nil {
