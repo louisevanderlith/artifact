@@ -40,7 +40,7 @@ func (req *Upload) Search(ctx context.Requester) (int, interface{}) {
 // @Success 200 {core.Upload} core.Upload
 // @router /:uploadKey [get]
 func (req *Upload) View(ctx context.Requester) (int, interface{}) {
-	key, err := husk.ParseKey(ctx.FindParam("uploadKey"))
+	key, err := husk.ParseKey(ctx.FindParam("key"))
 
 	if err != nil {
 		return http.StatusBadRequest, err
@@ -91,7 +91,7 @@ func (req *Upload) Create(ctx context.Requester) (int, interface{}) {
 	key, err := logic.SaveFile(b.Bytes(), copied, header, infoHead)
 
 	if err != nil {
-		panic(err)
+		log.Println(err)
 		return http.StatusInternalServerError, err
 	}
 
@@ -104,7 +104,7 @@ func (req *Upload) Update(ctx context.Requester) (int, interface{}) {
 
 // @router /:uploadKey [delte]
 func (req *Upload) Delete(ctx context.Requester) (int, interface{}) {
-	key, err := husk.ParseKey(ctx.FindParam("uploadKey"))
+	key, err := husk.ParseKey(ctx.FindParam("key"))
 
 	if err != nil {
 		return http.StatusBadRequest, err

@@ -79,7 +79,11 @@ func optimize(data image.Image, width, height int, format imaging.Format) ([]byt
 
 	err := imaging.Encode(writer, optImage, format)
 
+	if err != nil {
+		return nil, "", err
+	}
+
 	mimetype := "image/" + format.String()
 
-	return b.Bytes(), mimetype, err
+	return b.Bytes(), mimetype, nil
 }
