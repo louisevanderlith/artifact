@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/louisevanderlith/artifact/core"
@@ -19,13 +20,15 @@ func Download(ctx context.Requester) (int, interface{}) {
 	key, err := husk.ParseKey(ctx.FindParam("key"))
 
 	if err != nil {
-		return http.StatusInternalServerError, err
+		log.Println(err)
+		return http.StatusInternalServerError, nil
 	}
 
 	result, _, err = core.GetUploadFile(key)
 
 	if err != nil {
-		return http.StatusNotFound, err
+		log.Println(err)
+		return http.StatusNotFound, nil
 	}
 
 	return http.StatusOK, result

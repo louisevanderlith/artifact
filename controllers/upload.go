@@ -1,8 +1,6 @@
 package controllers
 
 import (
-	"bytes"
-	"io"
 	"log"
 	"net/http"
 
@@ -81,14 +79,7 @@ func (req *Upload) Create(ctx context.Requester) (int, interface{}) {
 
 	log.Printf("Size: %v\tKey: %s\r", header.Size, infoHead.ItemKey.String())
 
-	var b bytes.Buffer
-	copied, err := io.Copy(&b, file)
-
-	if err != nil {
-		return http.StatusInternalServerError, err
-	}
-
-	key, err := logic.SaveFile(b.Bytes(), copied, header, infoHead)
+	key, err := logic.SaveFile(file, header, infoHead)
 
 	if err != nil {
 		log.Println(err)

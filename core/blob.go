@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"errors"
 	"image"
+	"io"
 
 	"github.com/disintegration/imaging"
 	"github.com/louisevanderlith/artifact/core/optimizetype"
@@ -19,15 +20,14 @@ func init() {
 	optimizers = getOptimizers()
 }
 
-func NewBLOB(data []byte, purpose string) ([]byte, string, error) {
+func NewBLOB(data io.Reader, purpose string) ([]byte, string, error) {
 	targetType := optimizetype.GetEnum(purpose)
 	return OptimizeFor(data, targetType)
 }
 
 //OptimizeFor returns the new Bytes, MIME Type and an error
-func OptimizeFor(data []byte, oType optimizetype.Enum) ([]byte, string, error) {
-	reader := bytes.NewReader(data)
-	decoded, err := imaging.Decode(reader)
+func OptimizeFor(data io.Reader, oType optimizetype.Enum) ([]byte, string, error) {
+	decoded, err := imaging.Decode(data)
 
 	if err != nil {
 		return nil, "", err
