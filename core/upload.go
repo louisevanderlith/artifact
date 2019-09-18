@@ -44,8 +44,13 @@ func GetUploadsBySize(size int64) husk.Collection {
 }
 
 func RemoveUpload(key husk.Key) error {
-	defer ctx.Uploads.Save()
-	return ctx.Uploads.Delete(key)
+	err := ctx.Uploads.Delete(key)
+
+	if err != nil {
+		return err
+	}
+
+	return ctx.Uploads.Save()
 }
 
 func (upload Upload) Create() (husk.Recorder, error) {
@@ -55,7 +60,11 @@ func (upload Upload) Create() (husk.Recorder, error) {
 		return nil, rec.Error
 	}
 
-	defer ctx.Uploads.Save()
+	err := ctx.Uploads.Save()
+
+	if err != nil {
+		return nil, err
+	}
 
 	return rec.Record, nil
 }
