@@ -4,16 +4,6 @@ github.com/disintegration/imaging v1.6.0 h1:nVPXRUUQ36Z7MNf0O77UzgnOb1mkMMor7lmJ
 github.com/disintegration/imaging v1.6.0/go.mod h1:xuIt+sRxDFrHS0drzXUlCJthkJ8k7lkkUojDSR247MQ=
 github.com/gorilla/mux v1.7.3 h1:gnP5JzjVOuiZD07fKKToCAOjS0yOpj/qPETTXCCS6hw=
 github.com/gorilla/mux v1.7.3/go.mod h1:1lud6UwP+6orDFRuTfBEV8e9/aOM/c4fVVCaMa2zaAs=
-github.com/louisevanderlith/droxolite v1.5.3 h1:5O41Pcfs5jIVZQ7y9N5fet5JjDGL041acG/kICgSsuI=
-github.com/louisevanderlith/droxolite v1.5.3/go.mod h1:4MGmNynabJT1TDKQO0lGxMv9TNoWQ3+b2W98wK/mESk=
-github.com/louisevanderlith/droxolite v1.5.4 h1:a6YCSb+ToZdFRm/p7Q6C5/lsdscw9ySF9dV9a+xYsGM=
-github.com/louisevanderlith/droxolite v1.5.4/go.mod h1:4MGmNynabJT1TDKQO0lGxMv9TNoWQ3+b2W98wK/mESk=
-github.com/louisevanderlith/droxolite v1.5.5 h1:Nq9vhYDQOQS+YWNxT/612O7jKwxkzX5saJSvqcXXDJM=
-github.com/louisevanderlith/droxolite v1.5.5/go.mod h1:4MGmNynabJT1TDKQO0lGxMv9TNoWQ3+b2W98wK/mESk=
-github.com/louisevanderlith/droxolite v1.5.7 h1:zGEhgF63axrJx6wTq9mK0V+sjaJBouwxrgLfH+sPi0o=
-github.com/louisevanderlith/droxolite v1.5.7/go.mod h1:4MGmNynabJT1TDKQO0lGxMv9TNoWQ3+b2W98wK/mESk=
-github.com/louisevanderlith/droxolite v1.5.8 h1:EIvWlqlx3+uFAkM2rCRioM2BFGr6zemy9iiCKOY6hw8=
-github.com/louisevanderlith/droxolite v1.5.8/go.mod h1:4MGmNynabJT1TDKQO0lGxMv9TNoWQ3+b2W98wK/mESk=
 github.com/louisevanderlith/droxolite v1.6.0 h1:ur8blghGLZDhpOpV9FM7pRlHFUDi6nYw1hKghSrftO0=
 github.com/louisevanderlith/droxolite v1.6.0/go.mod h1:4MGmNynabJT1TDKQO0lGxMv9TNoWQ3+b2W98wK/mESk=
 github.com/louisevanderlith/husk v0.6.25 h1:QfO71voenofBx8DC0pw8f1zy/S5fHfiBIY5oN/cnTbE=
