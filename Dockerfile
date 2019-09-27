@@ -20,7 +20,6 @@ RUN CGO_ENABLED="0" go build
 FROM scratch
 
 COPY --from=builder /box/artifact .
-COPY conf conf
 
 EXPOSE 8082
 
