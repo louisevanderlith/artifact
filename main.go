@@ -16,36 +16,29 @@ import (
 )
 
 func main() {
-	keyPath := os.Getenv("KEYPATH")
-	pubName := os.Getenv("PUBLICKEY")
-	host := os.Getenv("HOST")
-	httpport, _ := strconv.Atoi(os.Getenv("HTTPPORT"))
-	appName := os.Getenv("APPNAME")
-	pubPath := path.Join(keyPath, pubName)
-
-	// Register with router
-	srv := bodies.NewService(appName, "", pubPath, host, httpport, servicetype.API)
-
-	routr, err := do.GetServiceURL("", "Router.API", false)
-
-	if err != nil {
-		panic(err)
-	}
-
-	err = srv.Register(routr)
-
-	if err != nil {
-		panic(err)
-	}
-
-	poxy := resins.NewMonoEpoxy(srv, element.GetNoTheme(host, srv.ID, "none"))
-	routers.Setup(poxy)
-	poxy.EnableCORS(host)
-
 	core.CreateContext()
 	defer core.Shutdown()
 
-	err = droxolite.Boot(poxy)
+	r := gin.Default()
+	//r.Use(cors)
+	host := os.Getenv("HOST")
+	authority := "https://oauth2." + host
+	provider, err := oidc.NewProvider(context.Background(), authority)
+	if err != nil {
+		panic(err)
+	}
+
+	r.GET("/upload/:key", upload.View)
+	r.POST("/upload", upload.Create)
+	r.PUT("/upload/:key", upload.Update)
+	r.DELETE("/upload/:key", upload.Delete)
+	r.GET("/upload/:key", upload.View)
+
+	r.GET("/uploads", upload.Get)
+	r.GET("/uploads/:pagesize/*hash", upload.Search)
+
+	r.GET("/download/:key", controllers.Download)
+	err := r.Run(":8082")
 
 	if err != nil {
 		panic(err)
