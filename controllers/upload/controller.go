@@ -1,12 +1,11 @@
 package upload
 
 import (
+	"github.com/gin-gonic/gin"
+	"github.com/louisevanderlith/droxo"
+	"github.com/louisevanderlith/husk"
 	"log"
 	"net/http"
-	"strconv"
-
-	"github.com/gin-gonic/gin"
-	"github.com/louisevanderlith/husk"
 
 	"github.com/louisevanderlith/artifact/core"
 	"github.com/louisevanderlith/artifact/logic"
@@ -24,7 +23,7 @@ func Get(c *gin.Context) {
 // @router /all/:pagesize [get]
 func Search(c *gin.Context) {
 	ps := c.Param("pagesize")
-	page, size := getPageData(ps)
+	page, size := droxo.GetPageData(ps)
 
 	results := core.GetUploads(page, size)
 
@@ -114,28 +113,4 @@ func Delete(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, "Completed")
-}
-
-func getPageData(pageData string) (int, int) {
-	defaultPage := 1
-	defaultSize := 10
-
-	if len(pageData) < 2 {
-		return defaultPage, defaultSize
-	}
-
-	pChar := []rune(pageData[:1])
-
-	if len(pChar) != 1 {
-		return defaultPage, defaultSize
-	}
-
-	page := int(pChar[0]) % 32
-	pageSize, err := strconv.Atoi(pageData[1:])
-
-	if err != nil {
-		return defaultPage, defaultSize
-	}
-
-	return page, pageSize
 }
