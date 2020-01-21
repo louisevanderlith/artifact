@@ -2,6 +2,7 @@ package core
 
 import (
 	"github.com/louisevanderlith/husk"
+	"github.com/louisevanderlith/husk/serials"
 )
 
 type context struct {
@@ -12,7 +13,7 @@ var ctx context
 
 func CreateContext() {
 	ctx = context{
-		Uploads: husk.NewTable(new(Upload)),
+		Uploads: husk.NewTable(Upload{}, serials.GobSerial{}),
 	}
 }
 

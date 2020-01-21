@@ -1,4 +1,4 @@
-package controllers
+package upload
 
 import (
 	"log"
@@ -61,7 +61,14 @@ func View(c *gin.Context) {
 // @Failure 403 body is empty
 // @router / [post]
 func Create(c *gin.Context) {
-	file, header, err := c.File("file")
+	err := c.Request.ParseMultipartForm(32 << 20)
+
+	if err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	file, header, err := c.Request.FormFile("file")
 
 	if err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
@@ -69,7 +76,7 @@ func Create(c *gin.Context) {
 
 	defer file.Close()
 
-	info := c.FindFormValue("info")
+	info := c.PostForm("info")
 	infoHead, err := logic.GetInfoHead(info)
 
 	if err != nil {
@@ -91,7 +98,7 @@ func Update(c *gin.Context) {
 	c.JSON(http.StatusMethodNotAllowed, nil)
 }
 
-// @router /:uploadKey [delte]
+// @router /:uploadKey [delete]
 func Delete(c *gin.Context) {
 	k := c.Param("key")
 	key, err := husk.ParseKey(k)
