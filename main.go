@@ -1,51 +1,31 @@
 package main
 
 import (
-	"os"
-	"path"
-	"strconv"
+	"flag"
+	"github.com/louisevanderlith/artifact/handles"
+	"net/http"
+	"time"
 
 	"github.com/louisevanderlith/artifact/core"
-	"github.com/louisevanderlith/artifact/routers"
-	"github.com/louisevanderlith/droxolite"
-	"github.com/louisevanderlith/droxolite/bodies"
-	"github.com/louisevanderlith/droxolite/do"
-	"github.com/louisevanderlith/droxolite/element"
-	"github.com/louisevanderlith/droxolite/resins"
-	"github.com/louisevanderlith/droxolite/servicetype"
 )
 
 func main() {
-	keyPath := os.Getenv("KEYPATH")
-	pubName := os.Getenv("PUBLICKEY")
-	host := os.Getenv("HOST")
-	httpport, _ := strconv.Atoi(os.Getenv("HTTPPORT"))
-	appName := os.Getenv("APPNAME")
-	pubPath := path.Join(keyPath, pubName)
-
-	// Register with router
-	srv := bodies.NewService(appName, "", pubPath, host, httpport, servicetype.API)
-
-	routr, err := do.GetServiceURL("", "Router.API", false)
-
-	if err != nil {
-		panic(err)
-	}
-
-	err = srv.Register(routr)
-
-	if err != nil {
-		panic(err)
-	}
-
-	poxy := resins.NewMonoEpoxy(srv, element.GetNoTheme(host, srv.ID, "none"))
-	routers.Setup(poxy)
-	poxy.EnableCORS(host)
+	host := flag.String("host", "localhost", "Domain Host")
+	authrty := flag.String("authority", "http://localhost:8086", "Authority Provider's URL")
+	srcSecrt := flag.String("scopekey", "secret", "Secret used to validate against scopes")
+	flag.Parse()
 
 	core.CreateContext()
 	defer core.Shutdown()
 
-	err = droxolite.Boot(poxy)
+	srvr := &http.Server{
+		ReadTimeout:  time.Second * 15,
+		WriteTimeout: time.Second * 15,
+		Addr:         ":8082",
+		Handler:      handles.SetupRoutes(*host, *srcSecrt, *authrty),
+	}
+
+	err := srvr.ListenAndServe()
 
 	if err != nil {
 		panic(err)

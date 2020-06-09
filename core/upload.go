@@ -1,7 +1,10 @@
 package core
 
 import (
+	"encoding/json"
 	"github.com/louisevanderlith/husk"
+	"io"
+	"mime/multipart"
 )
 
 type Upload struct {
@@ -13,11 +16,11 @@ type Upload struct {
 	BLOB     []byte `json:"-"` //Blob shouldn't be returned in JSON result sets.
 }
 
-func (o Upload) Valid() (bool, error) {
-	return husk.ValidateStruct(&o)
+func (u Upload) Valid() (bool, error) {
+	return husk.ValidateStruct(&u)
 }
 
-func GetUploads(page, pagesize int) husk.Collection {
+func GetUploads(page, pagesize int) (husk.Collection, error) {
 	return ctx.Uploads.Find(page, pagesize, husk.Everything())
 }
 
@@ -32,14 +35,52 @@ func GetUploadFile(key husk.Key) (result []byte, filename string, err error) {
 		return nil, "", err
 	}
 
-	uploadData := upload.Data().(*Upload)
+	uploadData := upload.Data().(Upload)
 	blob := uploadData.BLOB
 
 	return blob, uploadData.Name, err
 }
 
+type InfoHead struct {
+	For      string
+	ItemKey  husk.Key
+	ItemName string
+}
+
+func GetInfoHead(header string) (InfoHead, error) {
+	var result InfoHead
+	err := json.Unmarshal([]byte(header), &result)
+
+	return result, err
+}
+
+func SaveFile(b io.Reader, header *multipart.FileHeader, info InfoHead) (key husk.Key, err error) {
+	blob, mime, err := NewBLOB(b, info.For)
+
+	if err != nil {
+		return husk.CrazyKey(), err
+	}
+
+	upload := Upload{
+		BLOB:     blob,
+		Size:     header.Size,
+		Name:     header.Filename,
+		ItemKey:  info.ItemKey,
+		ItemName: info.ItemName,
+		MimeType: mime,
+	}
+
+	rec, err := upload.Create()
+
+	if err != nil {
+		return husk.CrazyKey(), err
+	}
+
+	return rec.GetKey(), nil
+}
+
 //GetUploadsBySize returns the first 50 records larger than @size bytes.
-func GetUploadsBySize(size int64) husk.Collection {
+func GetUploadsBySize(size int64) (husk.Collection, error) {
 	return ctx.Uploads.Find(1, 50, bySize(size))
 }
 
@@ -53,8 +94,8 @@ func RemoveUpload(key husk.Key) error {
 	return ctx.Uploads.Save()
 }
 
-func (upload Upload) Create() (husk.Recorder, error) {
-	rec := ctx.Uploads.Create(upload)
+func (u Upload) Create() (husk.Recorder, error) {
+	rec := ctx.Uploads.Create(u)
 
 	if rec.Error != nil {
 		return nil, rec.Error

@@ -1,6 +1,8 @@
-package controllers
+package handles
 
 import (
+	"bytes"
+	"github.com/louisevanderlith/droxolite/mix"
 	"log"
 	"net/http"
 
@@ -14,22 +16,28 @@ import (
 // @Param	uploadID			path	int64 	true		"ID of the file you require"
 // @Success 200 {[]byte} []byte
 // @router /file/:uploadKey [get]
-func Download(ctx context.Requester) (int, interface{}) {
-	var result []byte
-	//var filename string
+func Download(w http.ResponseWriter, r *http.Request) {
+	ctx := context.New(w, r)
 	key, err := husk.ParseKey(ctx.FindParam("key"))
 
 	if err != nil {
 		log.Println(err)
-		return http.StatusInternalServerError, nil
+		http.Error(w, "", http.StatusInternalServerError)
+		return
 	}
 
-	result, _, err = core.GetUploadFile(key)
+	result, file, err := core.GetUploadFile(key)
 
 	if err != nil {
 		log.Println(err)
-		return http.StatusNotFound, nil
+		http.Error(w, "", http.StatusNotFound)
+		return
 	}
 
-	return http.StatusOK, result
+	err = ctx.Serve(http.StatusOK, mix.Octet(file, bytes.NewReader(result)))
+
+	if err != nil {
+		log.Println(err)
+		return
+	}
 }
