@@ -10,8 +10,7 @@ import (
 )
 
 func main() {
-	host := flag.String("host", "localhost", "Domain Host")
-	authrty := flag.String("authority", "http://localhost:8086", "Authority Provider's URL")
+	securty := flag.String("security", "http://localhost:8086", "Security Provider's URL")
 	srcSecrt := flag.String("scopekey", "secret", "Secret used to validate against scopes")
 	flag.Parse()
 
@@ -22,7 +21,7 @@ func main() {
 		ReadTimeout:  time.Second * 15,
 		WriteTimeout: time.Second * 15,
 		Addr:         ":8082",
-		Handler:      handles.SetupRoutes(*host, *srcSecrt, *authrty),
+		Handler:      handles.SetupRoutes(*securty, *srcSecrt),
 	}
 
 	err := srvr.ListenAndServe()
