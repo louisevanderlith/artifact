@@ -92,7 +92,7 @@ func CreateUpload(w http.ResponseWriter, r *http.Request) {
 	file, header, err := ctx.File("file")
 
 	if err != nil {
-		log.Println(err)
+		log.Println("ctx.File", err)
 		http.Error(w, "", http.StatusBadRequest)
 		return
 	}
@@ -103,18 +103,15 @@ func CreateUpload(w http.ResponseWriter, r *http.Request) {
 	infoHead, err := core.GetInfoHead(info)
 
 	if err != nil {
-		log.Println(err)
-		log.Println(err)
+		log.Println("core.GetInfoHead", err)
 		http.Error(w, "", http.StatusInternalServerError)
 		return
 	}
 
-	log.Printf("Size: %v\tKey: %s\r", header.Size, infoHead.ItemKey.String())
-
 	key, err := core.SaveFile(file, header, infoHead)
 
 	if err != nil {
-		log.Println(err)
+		log.Println("core.SaveFile", err)
 		http.Error(w, "", http.StatusInternalServerError)
 		return
 	}
@@ -122,7 +119,7 @@ func CreateUpload(w http.ResponseWriter, r *http.Request) {
 	err = ctx.Serve(http.StatusOK, mix.JSON(key))
 
 	if err != nil {
-		log.Println(err)
+		log.Println("http.Serve", err)
 		return
 	}
 }

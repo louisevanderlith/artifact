@@ -6,4 +6,4 @@ homepage: https://github.com/louisevanderlith/artifact
 environment:
   sdk: '>=2.0.0 < 3.0.0'
 dependencies:
-  mango_ui: '^1.0.1'
+  mango_ui: '^1.0.3'
