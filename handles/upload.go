@@ -72,7 +72,7 @@ func ViewUpload(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = ctx.Serve(http.StatusOK, mix.JSON(record.Data()))
+	err = ctx.Serve(http.StatusOK, mix.JSON(record))
 
 	if err != nil {
 		log.Println(err)

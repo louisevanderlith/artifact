@@ -16,7 +16,7 @@ type Upload struct {
 	BLOB     []byte `json:"-"` //Blob shouldn't be returned in JSON result sets.
 }
 
-func (u Upload) Valid() (bool, error) {
+func (u Upload) Valid() error {
 	return husk.ValidateStruct(&u)
 }
 
