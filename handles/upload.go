@@ -16,7 +16,7 @@ func GetUploads(w http.ResponseWriter, r *http.Request) {
 	results, err := core.GetUploads(1, 10)
 
 	if err != nil {
-		log.Println(err)
+		log.Println("GetUploads Error", err)
 		http.Error(w, "", http.StatusInternalServerError)
 		return
 	}
@@ -24,7 +24,7 @@ func GetUploads(w http.ResponseWriter, r *http.Request) {
 	err = ctx.Serve(http.StatusOK, mix.JSON(results))
 
 	if err != nil {
-		log.Println(err)
+		log.Println("Serve Error", err)
 		return
 	}
 }
@@ -40,7 +40,7 @@ func SearchUploads(w http.ResponseWriter, r *http.Request) {
 	results, err := core.GetUploads(page, size)
 
 	if err != nil {
-		log.Println(err)
+		log.Println("GetUploads Error", err)
 		http.Error(w, "", http.StatusInternalServerError)
 		return
 	}
@@ -48,7 +48,7 @@ func SearchUploads(w http.ResponseWriter, r *http.Request) {
 	err = ctx.Serve(http.StatusOK, mix.JSON(results))
 
 	if err != nil {
-		log.Println(err)
+		log.Println("Serve Error", err)
 		return
 	}
 }
@@ -59,7 +59,7 @@ func ViewUpload(w http.ResponseWriter, r *http.Request) {
 	key, err := husk.ParseKey(ctx.FindParam("key"))
 
 	if err != nil {
-		log.Println(err)
+		log.Println("Parse Key Error", err)
 		http.Error(w, "", http.StatusBadRequest)
 		return
 	}
@@ -67,7 +67,7 @@ func ViewUpload(w http.ResponseWriter, r *http.Request) {
 	record, err := core.GetUpload(key)
 
 	if err != nil {
-		log.Println(err)
+		log.Println("GetUpload", err)
 		http.Error(w, "", http.StatusNotFound)
 		return
 	}
@@ -75,7 +75,7 @@ func ViewUpload(w http.ResponseWriter, r *http.Request) {
 	err = ctx.Serve(http.StatusOK, mix.JSON(record))
 
 	if err != nil {
-		log.Println(err)
+		log.Println("Serve Error", err)
 		return
 	}
 }
@@ -92,7 +92,7 @@ func CreateUpload(w http.ResponseWriter, r *http.Request) {
 	file, header, err := ctx.File("file")
 
 	if err != nil {
-		log.Println("ctx.File", err)
+		log.Println("File Error", err)
 		http.Error(w, "", http.StatusBadRequest)
 		return
 	}
@@ -103,7 +103,7 @@ func CreateUpload(w http.ResponseWriter, r *http.Request) {
 	infoHead, err := core.GetInfoHead(info)
 
 	if err != nil {
-		log.Println("core.GetInfoHead", err)
+		log.Println("GetInfoHead Error", err)
 		http.Error(w, "", http.StatusInternalServerError)
 		return
 	}
@@ -111,7 +111,7 @@ func CreateUpload(w http.ResponseWriter, r *http.Request) {
 	key, err := core.SaveFile(file, header, infoHead)
 
 	if err != nil {
-		log.Println("core.SaveFile", err)
+		log.Println("SaveFile Error", err)
 		http.Error(w, "", http.StatusInternalServerError)
 		return
 	}
@@ -119,7 +119,7 @@ func CreateUpload(w http.ResponseWriter, r *http.Request) {
 	err = ctx.Serve(http.StatusOK, mix.JSON(key))
 
 	if err != nil {
-		log.Println("http.Serve", err)
+		log.Println("Serve Error", err)
 		return
 	}
 }

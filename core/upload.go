@@ -95,17 +95,17 @@ func RemoveUpload(key husk.Key) error {
 }
 
 func (u Upload) Create() (husk.Recorder, error) {
-	rec := ctx.Uploads.Create(u)
-
-	if rec.Error != nil {
-		return nil, rec.Error
-	}
-
-	err := ctx.Uploads.Save()
+	rec, err := ctx.Uploads.Create(u)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return rec.Record, nil
+	err = ctx.Uploads.Save()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return rec, nil
 }
