@@ -2,12 +2,12 @@ package handles
 
 import (
 	"bytes"
+	"github.com/louisevanderlith/droxolite/drx"
 	"github.com/louisevanderlith/droxolite/mix"
 	"log"
 	"net/http"
 
 	"github.com/louisevanderlith/artifact/core"
-	"github.com/louisevanderlith/droxolite/context"
 	"github.com/louisevanderlith/husk"
 )
 
@@ -17,8 +17,7 @@ import (
 // @Success 200 {[]byte} []byte
 // @router /file/:uploadKey [get]
 func Download(w http.ResponseWriter, r *http.Request) {
-	ctx := context.New(w, r)
-	key, err := husk.ParseKey(ctx.FindParam("key"))
+	key, err := husk.ParseKey(drx.FindParam(r, "key"))
 
 	if err != nil {
 		log.Println(err)
@@ -34,7 +33,7 @@ func Download(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = ctx.Serve(http.StatusOK, mix.Octet(file, bytes.NewReader(result)))
+	err = mix.Write(w, mix.Octet(file, bytes.NewReader(result)))
 
 	if err != nil {
 		log.Println(err)

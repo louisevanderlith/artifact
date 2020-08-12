@@ -7,26 +7,26 @@ import (
 	"net/http"
 )
 
-func SetupRoutes(secureUrl, scrt string) http.Handler {
+func SetupRoutes(scrt, securityUrl, managerUrl string) http.Handler {
 	r := mux.NewRouter()
 
-	view := kong.ResourceMiddleware("artifact.uploads.view", scrt, secureUrl, ViewUpload)
+	view := kong.ResourceMiddleware(http.DefaultClient, "artifact.uploads.view", scrt, securityUrl, managerUrl, ViewUpload)
 	r.HandleFunc("/upload/{key:[0-9]+\\x60[0-9]+}", view).Methods(http.MethodGet)
 
-	create := kong.ResourceMiddleware("artifact.uploads.create", scrt, secureUrl, CreateUpload)
+	create := kong.ResourceMiddleware(http.DefaultClient, "artifact.uploads.create", scrt, securityUrl, managerUrl, CreateUpload)
 	r.HandleFunc("/upload", create).Methods(http.MethodPost)
 
-	delete := kong.ResourceMiddleware("artifact.uploads.delete", scrt, secureUrl, DeleteUpload)
+	delete := kong.ResourceMiddleware(http.DefaultClient, "artifact.uploads.delete", scrt, securityUrl, managerUrl, DeleteUpload)
 	r.HandleFunc("/upload/{key:[0-9]+\\x60[0-9]+}", delete).Methods(http.MethodDelete)
 
-	search := kong.ResourceMiddleware("artifact.uploads.search", scrt, secureUrl, SearchUploads)
+	search := kong.ResourceMiddleware(http.DefaultClient, "artifact.uploads.search", scrt, securityUrl, managerUrl, SearchUploads)
 	r.HandleFunc("/upload/{pagesize:[A-Z][0-9]+}", search).Methods(http.MethodGet)
 	r.HandleFunc("/upload/{pagesize:[A-Z][0-9]+}/{hash:[a-zA-Z0-9]+={0,2}}", search).Methods(http.MethodGet)
 
-	dwnld := kong.ResourceMiddleware("artifact.download", scrt, secureUrl, Download)
+	dwnld := kong.ResourceMiddleware(http.DefaultClient, "artifact.download", scrt, securityUrl, managerUrl, Download)
 	r.HandleFunc("/download/{key:[0-9]+`[0-9]+}", dwnld).Methods(http.MethodGet)
 
-	lst, err := kong.Whitelist(http.DefaultClient, secureUrl, "artifact.download", scrt)
+	lst, err := kong.Whitelist(http.DefaultClient, securityUrl, "artifact.download", scrt)
 
 	if err != nil {
 		panic(err)

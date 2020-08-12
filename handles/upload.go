@@ -1,18 +1,17 @@
 package handles
 
 import (
+	"github.com/louisevanderlith/droxolite/drx"
 	"github.com/louisevanderlith/droxolite/mix"
 	"log"
 	"net/http"
 
-	"github.com/louisevanderlith/droxolite/context"
 	"github.com/louisevanderlith/husk"
 
 	"github.com/louisevanderlith/artifact/core"
 )
 
 func GetUploads(w http.ResponseWriter, r *http.Request) {
-	ctx := context.New(w, r)
 	results, err := core.GetUploads(1, 10)
 
 	if err != nil {
@@ -21,7 +20,7 @@ func GetUploads(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = ctx.Serve(http.StatusOK, mix.JSON(results))
+	err = mix.Write(w, mix.JSON(results))
 
 	if err != nil {
 		log.Println("Serve Error", err)
@@ -34,8 +33,7 @@ func GetUploads(w http.ResponseWriter, r *http.Request) {
 // @Success 200 {[]core.Upload} []core.Upload
 // @router /all/:pagesize [get]
 func SearchUploads(w http.ResponseWriter, r *http.Request) {
-	ctx := context.New(w, r)
-	page, size := ctx.GetPageData()
+	page, size := drx.GetPageData(r)
 
 	results, err := core.GetUploads(page, size)
 
@@ -45,7 +43,7 @@ func SearchUploads(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = ctx.Serve(http.StatusOK, mix.JSON(results))
+	err = mix.Write(w, mix.JSON(results))
 
 	if err != nil {
 		log.Println("Serve Error", err)
@@ -55,8 +53,7 @@ func SearchUploads(w http.ResponseWriter, r *http.Request) {
 
 // ViewUpload
 func ViewUpload(w http.ResponseWriter, r *http.Request) {
-	ctx := context.New(w, r)
-	key, err := husk.ParseKey(ctx.FindParam("key"))
+	key, err := husk.ParseKey(drx.FindParam(r, "key"))
 
 	if err != nil {
 		log.Println("Parse Key Error", err)
@@ -72,7 +69,7 @@ func ViewUpload(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = ctx.Serve(http.StatusOK, mix.JSON(record))
+	err = mix.Write(w, mix.JSON(record))
 
 	if err != nil {
 		log.Println("Serve Error", err)
@@ -88,8 +85,7 @@ func ViewUpload(w http.ResponseWriter, r *http.Request) {
 // @Failure 403 body is empty
 // @router / [post]
 func CreateUpload(w http.ResponseWriter, r *http.Request) {
-	ctx := context.New(w, r)
-	file, header, err := ctx.File("file")
+	file, header, err := r.FormFile("file")
 
 	if err != nil {
 		log.Println("File Error", err)
@@ -99,7 +95,7 @@ func CreateUpload(w http.ResponseWriter, r *http.Request) {
 
 	defer file.Close()
 
-	info := ctx.FindFormValue("info")
+	info := r.FormValue("info")
 	infoHead, err := core.GetInfoHead(info)
 
 	if err != nil {
@@ -116,7 +112,7 @@ func CreateUpload(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = ctx.Serve(http.StatusOK, mix.JSON(key))
+	err = mix.Write(w, mix.JSON(key))
 
 	if err != nil {
 		log.Println("Serve Error", err)
@@ -126,8 +122,7 @@ func CreateUpload(w http.ResponseWriter, r *http.Request) {
 
 // @router /:uploadKey [delte]
 func DeleteUpload(w http.ResponseWriter, r *http.Request) {
-	ctx := context.New(w, r)
-	key, err := husk.ParseKey(ctx.FindParam("key"))
+	key, err := husk.ParseKey(drx.FindParam(r, "key"))
 
 	if err != nil {
 		log.Println(err)
@@ -143,7 +138,7 @@ func DeleteUpload(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = ctx.Serve(http.StatusOK, mix.JSON("Completed"))
+	err = mix.Write(w, mix.JSON("Completed"))
 
 	if err != nil {
 		log.Println(err)
