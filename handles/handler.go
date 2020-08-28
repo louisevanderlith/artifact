@@ -23,10 +23,9 @@ func SetupRoutes(scrt, securityUrl, managerUrl string) http.Handler {
 	r.HandleFunc("/upload/{pagesize:[A-Z][0-9]+}", search).Methods(http.MethodGet)
 	r.HandleFunc("/upload/{pagesize:[A-Z][0-9]+}/{hash:[a-zA-Z0-9]+={0,2}}", search).Methods(http.MethodGet)
 
-	dwnld := ins.Middleware("artifact.download", scrt, Download)
-	r.HandleFunc("/download/{key:[0-9]+`[0-9]+}", dwnld).Methods(http.MethodGet)
+	r.HandleFunc("/download/{key:[0-9]+`[0-9]+}", Download).Methods(http.MethodGet)
 
-	lst, err := kong.Whitelist(http.DefaultClient, securityUrl, "artifact.download", scrt)
+	lst, err := kong.Whitelist(http.DefaultClient, securityUrl, "artifact.uploads.create", scrt)
 
 	if err != nil {
 		panic(err)
@@ -38,6 +37,7 @@ func SetupRoutes(scrt, securityUrl, managerUrl string) http.Handler {
 			http.MethodGet,
 			http.MethodPost,
 			http.MethodOptions,
+			http.MethodDelete,
 			http.MethodHead,
 		},
 		AllowCredentials: true,

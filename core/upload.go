@@ -17,7 +17,7 @@ type Upload struct {
 }
 
 func (u Upload) Valid() error {
-	return husk.ValidateStruct(u)
+	return husk.ValidateStruct(&u)
 }
 
 func GetUploads(page, pagesize int) (husk.Collection, error) {

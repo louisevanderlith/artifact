@@ -50,18 +50,12 @@ void doUpload(File file, Up infoObj, String ctrlID) async {
 }
 
 void finishUpload(dynamic obj, Up infoObj, String ctrlID) async {
-  if (obj['Error'].length > 0) {
-    print(obj['Error']);
-    return;
-  }
-
   if (_imageURL?.isEmpty ?? true) {
     var apiroute = getEndpoint("artifact");
     _imageURL = "${apiroute}/download";
   }
 
-  var data = obj['Data'];
-  var fullURL = "${_imageURL}/${data}";
+  var fullURL = "${_imageURL}/${obj}";
 
   var imageHolder = querySelector("#${ctrlID.replaceFirst('Img', 'View')}");
   var uploader = querySelector("#${ctrlID}");
@@ -69,7 +63,7 @@ void finishUpload(dynamic obj, Up infoObj, String ctrlID) async {
   imageHolder.classes.remove('is-hidden');
   imageHolder.setAttribute('src', fullURL);
 
-  uploader.dataset['id'] = data;
+  uploader.dataset['id'] = obj;
   uploader.attributes.remove('required');
 }
 
