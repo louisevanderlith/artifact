@@ -3,10 +3,9 @@ package handles
 import (
 	"github.com/louisevanderlith/droxolite/drx"
 	"github.com/louisevanderlith/droxolite/mix"
+	"github.com/louisevanderlith/husk/keys"
 	"log"
 	"net/http"
-
-	"github.com/louisevanderlith/husk"
 
 	"github.com/louisevanderlith/artifact/core"
 )
@@ -53,7 +52,7 @@ func SearchUploads(w http.ResponseWriter, r *http.Request) {
 
 // ViewUpload
 func ViewUpload(w http.ResponseWriter, r *http.Request) {
-	key, err := husk.ParseKey(drx.FindParam(r, "key"))
+	key, err := keys.ParseKey(drx.FindParam(r, "key"))
 
 	if err != nil {
 		log.Println("Parse Key Error", err)
@@ -122,7 +121,7 @@ func CreateUpload(w http.ResponseWriter, r *http.Request) {
 
 // @router /:uploadKey [delte]
 func DeleteUpload(w http.ResponseWriter, r *http.Request) {
-	key, err := husk.ParseKey(drx.FindParam(r, "key"))
+	key, err := keys.ParseKey(drx.FindParam(r, "key"))
 
 	if err != nil {
 		log.Println(err)
@@ -141,7 +140,7 @@ func DeleteUpload(w http.ResponseWriter, r *http.Request) {
 	err = mix.Write(w, mix.JSON("Completed"))
 
 	if err != nil {
-		log.Println(err)
+		log.Println("Serve Error", err)
 		return
 	}
 }

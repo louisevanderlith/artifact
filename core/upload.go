@@ -2,13 +2,17 @@ package core
 
 import (
 	"encoding/json"
-	"github.com/louisevanderlith/husk"
+	"github.com/louisevanderlith/husk/hsk"
+	"github.com/louisevanderlith/husk/keys"
+	"github.com/louisevanderlith/husk/op"
+	"github.com/louisevanderlith/husk/records"
+	"github.com/louisevanderlith/husk/validation"
 	"io"
 	"mime/multipart"
 )
 
 type Upload struct {
-	ItemKey  husk.Key
+	ItemKey  keys.TimeKey
 	ItemName string `hsk:"size(75)"`
 	Name     string `hsk:"size(50)"`
 	MimeType string `hsk:"size(30)"`
@@ -17,18 +21,18 @@ type Upload struct {
 }
 
 func (u Upload) Valid() error {
-	return husk.ValidateStruct(&u)
+	return validation.Struct(u)
 }
 
-func GetUploads(page, pagesize int) (husk.Collection, error) {
-	return ctx.Uploads.Find(page, pagesize, husk.Everything())
+func GetUploads(page, pagesize int) (records.Page, error) {
+	return ctx.Uploads.Find(page, pagesize, op.Everything())
 }
 
-func GetUpload(key husk.Key) (husk.Recorder, error) {
+func GetUpload(key hsk.Key) (hsk.Record, error) {
 	return ctx.Uploads.FindByKey(key)
 }
 
-func GetUploadFile(key husk.Key) (result []byte, filename string, err error) {
+func GetUploadFile(key hsk.Key) (result []byte, filename string, err error) {
 	upload, err := GetUpload(key)
 
 	if err != nil {
@@ -43,7 +47,7 @@ func GetUploadFile(key husk.Key) (result []byte, filename string, err error) {
 
 type InfoHead struct {
 	For      string
-	ItemKey  husk.Key
+	ItemKey  keys.TimeKey
 	ItemName string
 }
 
@@ -54,11 +58,11 @@ func GetInfoHead(header string) (InfoHead, error) {
 	return result, err
 }
 
-func SaveFile(b io.Reader, header *multipart.FileHeader, info InfoHead) (key husk.Key, err error) {
+func SaveFile(b io.Reader, header *multipart.FileHeader, info InfoHead) (hsk.Key, error) {
 	blob, mime, err := NewBLOB(b, info.For)
 
 	if err != nil {
-		return husk.CrazyKey(), err
+		return nil, err
 	}
 
 	upload := Upload{
@@ -70,42 +74,18 @@ func SaveFile(b io.Reader, header *multipart.FileHeader, info InfoHead) (key hus
 		MimeType: mime,
 	}
 
-	rec, err := upload.Create()
-
-	if err != nil {
-		return husk.CrazyKey(), err
-	}
-
-	return rec.GetKey(), nil
+	return upload.Create()
 }
 
 //GetUploadsBySize returns the first 50 records larger than @size bytes.
-func GetUploadsBySize(size int64) (husk.Collection, error) {
+func GetUploadsBySize(size int64) (records.Page, error) {
 	return ctx.Uploads.Find(1, 50, bySize(size))
 }
 
-func RemoveUpload(key husk.Key) error {
-	err := ctx.Uploads.Delete(key)
-
-	if err != nil {
-		return err
-	}
-
-	return ctx.Uploads.Save()
+func RemoveUpload(key hsk.Key) error {
+	return ctx.Uploads.Delete(key)
 }
 
-func (u Upload) Create() (husk.Recorder, error) {
-	rec, err := ctx.Uploads.Create(u)
-
-	if err != nil {
-		return nil, err
-	}
-
-	err = ctx.Uploads.Save()
-
-	if err != nil {
-		return nil, err
-	}
-
-	return rec, nil
+func (u Upload) Create() (hsk.Key, error) {
+	return ctx.Uploads.Create(u)
 }

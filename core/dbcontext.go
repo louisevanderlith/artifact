@@ -5,7 +5,7 @@ import (
 )
 
 type context struct {
-	Uploads husk.Tabler
+	Uploads husk.Table
 }
 
 var ctx context

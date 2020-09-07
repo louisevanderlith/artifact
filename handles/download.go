@@ -4,11 +4,11 @@ import (
 	"bytes"
 	"github.com/louisevanderlith/droxolite/drx"
 	"github.com/louisevanderlith/droxolite/mix"
+	"github.com/louisevanderlith/husk/keys"
 	"log"
 	"net/http"
 
 	"github.com/louisevanderlith/artifact/core"
-	"github.com/louisevanderlith/husk"
 )
 
 // @Title GetFile
@@ -17,7 +17,7 @@ import (
 // @Success 200 {[]byte} []byte
 // @router /file/:uploadKey [get]
 func Download(w http.ResponseWriter, r *http.Request) {
-	key, err := husk.ParseKey(drx.FindParam(r, "key"))
+	key, err := keys.ParseKey(drx.FindParam(r, "key"))
 
 	if err != nil {
 		log.Println(err)
