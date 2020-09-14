@@ -39,7 +39,7 @@ func GetUploadFile(key hsk.Key) (result []byte, filename string, err error) {
 		return nil, "", err
 	}
 
-	uploadData := upload.Data().(Upload)
+	uploadData := upload.GetValue().(Upload)
 	blob := uploadData.BLOB
 
 	return blob, uploadData.Name, err

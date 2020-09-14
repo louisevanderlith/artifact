@@ -7,7 +7,7 @@ import (
 type uploadFilter func(obj Upload) bool
 
 func (f uploadFilter) Filter(obj hsk.Record) bool {
-	return f(obj.Data().(Upload))
+	return f(obj.GetValue().(Upload))
 }
 
 func bySize(size int64) uploadFilter {
