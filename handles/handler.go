@@ -2,14 +2,14 @@ package handles
 
 import (
 	"github.com/gorilla/mux"
-	"github.com/louisevanderlith/kong"
+	"github.com/louisevanderlith/kong/middle"
 	"github.com/rs/cors"
 	"net/http"
 )
 
 func SetupRoutes(scrt, securityUrl, managerUrl string) http.Handler {
 	r := mux.NewRouter()
-	ins := kong.NewResourceInspector(http.DefaultClient, securityUrl, managerUrl)
+	ins := middle.NewResourceInspector(http.DefaultClient, securityUrl, managerUrl)
 	view := ins.Middleware("artifact.uploads.view", scrt, ViewUpload)
 	r.HandleFunc("/upload/{key:[0-9]+\\x60[0-9]+}", view).Methods(http.MethodGet)
 
@@ -25,7 +25,7 @@ func SetupRoutes(scrt, securityUrl, managerUrl string) http.Handler {
 
 	r.HandleFunc("/download/{key:[0-9]+`[0-9]+}", Download).Methods(http.MethodGet)
 
-	lst, err := kong.Whitelist(http.DefaultClient, securityUrl, "artifact.uploads.create", scrt)
+	lst, err := middle.Whitelist(http.DefaultClient, securityUrl, "artifact.uploads.create", scrt)
 
 	if err != nil {
 		panic(err)
