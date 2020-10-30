@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:html';
 
+import 'package:dart_toast/dart_toast.dart';
 import 'package:mango_ui/keys.dart';
 import 'package:mango_ui/requester.dart';
 
@@ -20,7 +21,6 @@ void uploadFile(Event e) {
   if (e.target is FileUploadInputElement) {
     FileUploadInputElement fileElem = e.target;
     var files = fileElem.files;
-
     var forAttr = fileElem.dataset['for'];
     var nameAttr = fileElem.dataset['name'];
     var ctrlID = fileElem.id;
@@ -28,7 +28,6 @@ void uploadFile(Event e) {
 
     if (files.isNotEmpty) {
       File firstFile = files[0];
-
       doUpload(firstFile, infoObj, ctrlID);
     }
   }
@@ -40,12 +39,15 @@ void doUpload(File file, Up infoObj, String ctrlID) async {
   formData.append("info", jsonEncode(infoObj));
 
   var req = await createUpload(formData);
-  final resp = jsonDecode(req.response);
 
   if (req.status == 200) {
+    final resp = jsonDecode(req.response);
     finishUpload(resp, infoObj, ctrlID);
   } else {
-    print(resp);
+    new Toast.error(
+        title: "Upload Error!",
+        message: req.response,
+        position: ToastPos.bottomLeft);
   }
 }
 

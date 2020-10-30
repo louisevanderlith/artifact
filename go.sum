@@ -124,8 +124,8 @@ github.com/kr/pretty v0.1.0/go.mod h1:dAy3ld7l9f0ibDNOQOHHMYYIIbhfbHSm3C4ZsoJORN
 github.com/kr/pty v1.1.1/go.mod h1:pFQYn66WHrOpPYNljwOMqo10TkYh1fy3cYio2l3bCsQ=
 github.com/kr/text v0.1.0 h1:45sCR5RtlFHMR4UwH9sdQ5TC8v0qDQCHnXt+kaKSTVE=
 github.com/kr/text v0.1.0/go.mod h1:4Jbv+DJW3UT/LiOwJeYQe1efqtUx/iVham/4vfdArNI=
-github.com/louisevanderlith/droxolite v1.16.2 h1:/brx2mno7ZdJu4k8FH4Cx68onNTTmKVYO99tQp04QTk=
-github.com/louisevanderlith/droxolite v1.16.2/go.mod h1:MMSJBpV2/1W4IXkR4kX9MPVD7cnzHelwnRILM7Vmjb8=
+github.com/louisevanderlith/droxolite v1.16.6 h1:EldFgXcnT+CdsEknbP3ZBMAtAcYYQoc0sH01vMRbQ3c=
+github.com/louisevanderlith/droxolite v1.16.6/go.mod h1:MMSJBpV2/1W4IXkR4kX9MPVD7cnzHelwnRILM7Vmjb8=
 github.com/louisevanderlith/husk v1.7.5 h1:03oBzu2Bv8ZqU2/vcAn+0IPaRxxF7pOWxn407utgXGs=
 github.com/louisevanderlith/husk v1.7.5/go.mod h1:iEFeOL3LmBuXlHl3lhiq8yDfob2CNbv+p23ZjP5DORU=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=

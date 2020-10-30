@@ -12,7 +12,7 @@ import (
 )
 
 type Upload struct {
-	ItemKey  keys.TimeKey
+	ItemKey  *keys.TimeKey
 	ItemName string `hsk:"size(75)"`
 	Name     string `hsk:"size(50)"`
 	MimeType string `hsk:"size(30)"`
@@ -47,7 +47,7 @@ func GetUploadFile(key hsk.Key) (result []byte, filename string, err error) {
 
 type InfoHead struct {
 	For      string
-	ItemKey  keys.TimeKey
+	ItemKey  *keys.TimeKey
 	ItemName string
 }
 

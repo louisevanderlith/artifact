@@ -1,5 +1,5 @@
 name: mango_artifact
-version: 1.0.1
+version: 1.0.2
 description: Wrapper for Artifact API
 repository: https://github.com/louisevanderlith/artifact
 homepage: https://github.com/louisevanderlith/artifact
@@ -7,3 +7,4 @@ environment:
   sdk: '>=2.0.0 < 3.0.0'
 dependencies:
   mango_ui: '^1.0.3'
+  dart_toast: '^0.3.0'
