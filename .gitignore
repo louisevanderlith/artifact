@@ -13,5 +13,14 @@
 
 artifact
 
+.dart_tool
+build
+pubspec.lock
+.packages
+
 db/*.husk
 !db/*.seed.json
+
+.idea
+
+cmd/cmd

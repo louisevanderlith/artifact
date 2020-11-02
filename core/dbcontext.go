@@ -5,14 +5,14 @@ import (
 )
 
 type context struct {
-	Uploads husk.Tabler
+	Uploads husk.Table
 }
 
 var ctx context
 
 func CreateContext() {
 	ctx = context{
-		Uploads: husk.NewTable(new(Upload)),
+		Uploads: husk.NewTable(Upload{}),
 	}
 }
 

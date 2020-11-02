@@ -1,17 +1,17 @@
 package core
 
 import (
-	"github.com/louisevanderlith/husk"
+	"github.com/louisevanderlith/husk/hsk"
 )
 
-type uploadFilter func(obj *Upload) bool
+type uploadFilter func(obj Upload) bool
 
-func (f uploadFilter) Filter(obj husk.Dataer) bool {
-	return f(obj.(*Upload))
+func (f uploadFilter) Filter(obj hsk.Record) bool {
+	return f(obj.GetValue().(Upload))
 }
 
 func bySize(size int64) uploadFilter {
-	return func(obj *Upload) bool {
+	return func(obj Upload) bool {
 		return obj.Size >= size
 	}
 }
